@@ -35,7 +35,7 @@ function closeNewNodeMenu(){
 function onCreateNodeButtonPress(){
     let name = document.getElementById("name-input").value;
     let justification = document.getElementById("justification-input").value;
-    let position = {x: document.getElementById("X-input").value, y:document.getElementById("Y-input").value};
+    let position = {x: parseInt(document.getElementById("X-input").value), y: parseInt(document.getElementById("Y-input").value)};
     let sExpression = new SExpression(document.getElementById("formula-input").value);
     createNode(name, justification, sExpression, position);
     closeNewNodeMenu();

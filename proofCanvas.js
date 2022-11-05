@@ -3,7 +3,8 @@
 let ctx = null;
 let canvas = null;
 
-let selectedNode = {id:-1};
+let mousedown = false;  //if the mouse button is down or up
+let selectedNode = null;
 
 //The offset coordinates of our window into the proof graph world (How much we have dragged the window)
 let worldXOffset = 0, worldYOffset = 0;
@@ -17,40 +18,52 @@ window.addEventListener('load', function() {
 
     //Setup our event listeners for different interactions with the canvas
     canvas.addEventListener('dblclick', onDoubleClick);
-    canvas.addEventListener('mousedown', onDown);
-    canvas.addEventListener('mouseup', onUp);
+    canvas.addEventListener('keydown', onKeyPress);
+    canvas.addEventListener('mousemove', onMouseMove);
+    canvas.addEventListener('mousedown', onMouseDown);
+    canvas.addEventListener('mouseup', onMouseUp);
 });
 
 //=============================== Event Handlers ===================================
 
-function onDown(event){
+function onMouseDown(event){
+    mousedown = true;
     let posX = event.offsetX + worldXOffset;
     let posY = event.offsetY + worldYOffset;
     let pos = {x: posX, y: posY};
-    let clickedNode = getClickedNode(pos);
-    console.log(clickedNode);
-    if(clickedNode){
-        selectedNode = clickedNode;
-        drawState();
+    if(event.ctrlKey && selectedNode){
+        createLink()
     }else{
-        worldXOffset += event.movementX;
-        worldYOffset += event.movementY;
-        console.log(worldXOffset);
+        selectedNode = getClickedNode(pos);
+    }
+    
+    drawState();
+}
+
+function onMouseUp(event){
+    mousedown = false;
+    let posX = event.offsetX + worldXOffset;
+    let posY = event.offsetY + worldYOffset;
+    let pos = {x: posX, y: posY};
+    selectedNode = getClickedNode(pos);
+    drawState();
+}
+
+function onMouseMove(event){
+    if(mousedown){
+        if(selectedNode){   //If we start dragging over a node, move the node with the mouse
+            selectedNode.position.x += event.movementX;
+            selectedNode.position.y += event.movementY;
+        }else{              //If we start dragging over empty space, move the world offset for drawing
+            worldXOffset -= event.movementX;
+            worldYOffset -= event.movementY;
+        }
         drawState();
     }
 }
 
-function onUp(event){
-    let posX = event.offsetX + worldXOffset;
-    let posY = event.offsetY + worldYOffset;
-    let pos = {x: posX, y: posY};
-    let clickedNode = getClickedNode(pos);
-    if(clickedNode){
-        selectedNode = clickedNode;
-        drawState();
-    }else{
-        drawState();
-    }
+function onKeyPress(event){
+
 }
 
 function onDoubleClick(event){
@@ -84,19 +97,21 @@ function drawNode(node){
     const padding = 10;
     ctx.font = "20px Arial";
     const fontHeight = ctx.measureText(node.name).fontBoundingBoxAscent;
-    let baseX = node.position.x - worldXOffset;
+
+    const baseX = node.position.x - worldXOffset;
+    const baseY = node.position.y - worldYOffset;
     
     //Compute the width of our node based on text on the node
-    let baseY = node.position.y - worldYOffset;
-    let assumptionsString = "{" + node.assumptions.toString() + "}";
-    let width = 2*padding + Math.max(
+    const assumptionsString = "{" + node.assumptions.toString() + "}";
+    const width = 2*padding + Math.max(
         ctx.measureText(node.expression.toString()).width,
         ctx.measureText(node.name).width,
         ctx.measureText(assumptionsString).width
     );
     
     //Draw the node body and compute our bounding box for future clicks
-    ctx.strokeStyle = selectedNode.id == node.id ? "#FF0000" : "#000000";
+    ctx.strokeStyle = selectedNode != null && selectedNode.id == node.id ? "Indigo" : "Black";
+    ctx.fillStyle = selectedNode != null && selectedNode.id == node.id ? "Lavender" : "white";
     ctx.roundRect(baseX, baseY, width, 3*fontHeight + 2*padding, padding);
     node.boundingBox = {
         x0: baseX + worldXOffset,
@@ -104,24 +119,26 @@ function drawNode(node){
         x1: baseX + width + worldXOffset,
         y1: baseY + 3*fontHeight + 2*padding + worldYOffset,
     };
+    ctx.fill();
     ctx.stroke();
-
-    //Draw the text on the node
-    ctx.fillText(node.name, baseX + 10, baseY + fontHeight + padding);
-    ctx.fillText(node.expression.toString(), baseX + padding, baseY + 2*fontHeight + padding);
-    ctx.fillText(assumptionsString, baseX + padding, baseY + 3*fontHeight + padding);
-
-    //Draw the hat with the inference rule
-    let hatText = inferenceRuleSymbols[node.justification];
-    let hatWidth = ctx.measureText(hatText).width + 2*padding;
+    
+    //Draw the hat
+    const hatText = inferenceRuleSymbols[node.justification];
+    const hatWidth = ctx.measureText(hatText).width + 2*padding;
     ctx.roundRect(baseX + (width - hatWidth)/2, baseY - (2*fontHeight + 2*padding), hatWidth, fontHeight + 2*padding, padding);
+    ctx.fill();
     ctx.stroke();
     ctx.beginPath();
     ctx.moveTo(baseX + width/2, baseY - fontHeight);
     ctx.lineTo(baseX + width/2, baseY);
     ctx.stroke();
-    ctx.fillText(hatText, baseX + (width - hatWidth)/2 + padding, baseY - (fontHeight + padding));
 
+    //Draw the text on the node
+    ctx.fillStyle = selectedNode != null && selectedNode.id == node.id ? "Indigo" : "Black";
+    ctx.fillText(node.name, baseX + 10, baseY + fontHeight + padding);
+    ctx.fillText(node.expression.toString(), baseX + padding, baseY + 2*fontHeight + padding);
+    ctx.fillText(assumptionsString, baseX + padding, baseY + 3*fontHeight + padding);
+    ctx.fillText(hatText, baseX + (width - hatWidth)/2 + padding, baseY - (fontHeight + padding));
 }
 
 function drawState(){

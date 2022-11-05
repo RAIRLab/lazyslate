@@ -99,4 +99,24 @@ class SExpression{
             return string.slice(0, -1) + ")";
         }
     }
+
+    equals(other) {
+        let values_match = this.value == other.value;
+        if (!values_match) {
+            return false;
+        }
+
+        let children_length_match = this.children.length == other.children.length;
+        if (!children_length_match) {
+            return false;
+        }
+
+        for (let i = 0; i < this.children.length; i++) {
+            if (!this.children[i].equals(other.children[i])) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

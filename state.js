@@ -15,6 +15,7 @@ class ProofNode{
         this.parents = [];
 
         //Only relevant to drawing, ignore
+        this.verified = false;
         this.boundingBox = null; //Set by draw calls
         this.topAnchor = null;
         this.botAnchor = null;
@@ -22,19 +23,37 @@ class ProofNode{
     }
 }
 
-function createNode(name, justification, expression, position){
-    proofNodes.push(new ProofNode(name, justification, expression, position));
+function verifyNode(node){
+    return false;
 }
 
+function verifyNodes(node, visited=[]){
+    node.verified = verifyNode(node);
+    visited.push(node.id);
+    for(let child of node.children){
+        if(!visited.includes(child.id)){
+            verifyNodes(child, visited);
+        }
+    }
+}
+
+function createNode(name, justification, expression, position){
+    let newNode = new ProofNode(name, justification, expression, position);
+    proofNodes.push(newNode);
+    verifyNodes(newNode);
+}
 
 //The hard parts where we have to update things
 function createLink(fromNode, toNode){
     proofLinks.push([fromNode, toNode]);
     fromNode.children.push(toNode);
     toNode.parents.push(fromNode);
+    verifyNodes(toNode);
+
 }
 
 function deleteNode(node){
+    let oldChildren = node.children;
     for(parent of node.parents){
         parent.children = parent.children.filter(n=>node.id != n.id);
     }
@@ -43,10 +62,14 @@ function deleteNode(node){
     }
     proofLinks = proofLinks.filter(n=> !(n[0].id == node.id || n[1].id == node.id));
     proofNodes = proofNodes.filter(n=> n.id != node.id);
+    for(child of oldChildren){
+        verifyNodes(child);
+    }
 }
 
 function deleteLink(fromNode, toNode){
     fromNode.children = fromNode.children.filter(n=>toNode.id != n.id);
     toNode.parents = toNode.parents.filter(n=>fromNode.id != n.id);
     proofLinks = proofLinks.filter(n=> !(n[0].id == fromNode.id && n[1].id == toNode.id));
+    verifyNodes(toNode);
 }

@@ -143,17 +143,21 @@ function drawNode(node){
     };
     ctx.fill();
     ctx.stroke();
-    
-    //Draw the hat
-    const hatText = inferenceRuleSymbols[node.justification];
-    const hatWidth = ctx.measureText(hatText).width + 2*padding;
-    //ctx.rect(baseX + (width - hatWidth)/2, baseY - (2*fontHeight + 2*padding), hatWidth, fontHeight + 2*padding, padding);
-    ctx.roundRect(baseX + (width - hatWidth)/2, baseY - (2*fontHeight + 2*padding), hatWidth, fontHeight + 2*padding, padding);
-    ctx.fill();
-    ctx.stroke();
+
+    //Draw the bar
     ctx.beginPath();
     ctx.moveTo(baseX + width/2, baseY - fontHeight);
     ctx.lineTo(baseX + width/2, baseY);
+    ctx.stroke();
+    
+    //Draw the hat
+    ctx.beginPath();
+    const hatText = inferenceRuleSymbols[node.justification];
+    const hatWidth = ctx.measureText(hatText).width + 2*padding;
+    ctx.strokeStyle = node.verified ? "green" : "red";
+    //ctx.rect(baseX + (width - hatWidth)/2, baseY - (2*fontHeight + 2*padding), hatWidth, fontHeight + 2*padding, padding);
+    ctx.roundRect(baseX + (width - hatWidth)/2, baseY - (2*fontHeight + 2*padding), hatWidth, fontHeight + 2*padding, padding);
+    ctx.fill();
     ctx.stroke();
 
     node.topAnchor = {x: baseX + width/2 + worldXOffset, y: baseY - (2*fontHeight + 2*padding) + worldYOffset}
@@ -168,6 +172,7 @@ function drawNode(node){
 }
 
 function drawLink(fromNode, toNode){
+    ctx.strokeStyle = "black";
     ctx.beginPath();
     ctx.moveTo(fromNode.botAnchor.x - worldXOffset, fromNode.botAnchor.y - worldYOffset);
     ctx.lineTo(toNode.topAnchor.x - worldXOffset, toNode.topAnchor.y - worldYOffset);

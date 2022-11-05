@@ -1,7 +1,7 @@
 
 # S-Expressions 
 
-An expression can either be a propositional constant, ~~predicate~~, or compound expression 
+An expression can either be a propositional constant, predicate, or compound expression 
 
 ## Propositional constants
 Propositional constants represent a true or false statement. In the editor they are represented as a single fully connected alphanumeric string not enclosed by any parenthesis.

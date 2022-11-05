@@ -13,6 +13,7 @@ logicalOperatorSymbols = {
 logicalOperatorNames = Object.keys(logicalOperatorSymbols);
 
 inferenceRules = [
+    {name: "assume", fullname: "Assumption"},
     {name: "notI", fullname: "Negation Introduction (Reductio ad absurdum)", },
     {name: "notE", fullname: "Negation Elimination (Law of excluded middle)", },
     {name: "andI", fullname: "Conjunction Introduction (Adjunction)",},
@@ -28,3 +29,10 @@ inferenceRules = [
     {name: "existsI", fullname: "Existential Introduction", },
     {name: "existsE", fullname: "Existential Elimination", },
 ];
+
+//Create unicode inference rule symbols for the link labels
+inferenceRuleSymbols = {"assume":"Assume"};
+for(let i = 1; i < inferenceRules.length; i++){
+    let name = inferenceRules[i].name;
+    inferenceRuleSymbols[name] = logicalOperatorSymbols[name.slice(0, -1)]+name.slice(-1);
+}

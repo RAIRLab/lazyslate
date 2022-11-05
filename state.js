@@ -4,27 +4,43 @@ let proofNodes = [];
 let proofLinks = [];
 
 class ProofNode{
-    constructor(name, justification, expression, position){
-        this.id = proofNodes.length == 0 ? 0 : proofNodes[proofNodes.length - 1].id + 1; //Ensure we never have conflicting node IDs if nodes are deleted
-        this.name = name == "" ? this.id : name; //use the ID as the name if none is provided
-        this.justification = justification;
-        this.expression = expression;
-        this.assumptions = new Set(); //Until the node is connected to something, its only assumption is itself
 
+    constructor(name, justification, expression, position){
+        if(arguments.length == 0){
+            this._default_constructor()
+        }else{
+            this.id = proofNodes.length == 0 ? 0 : proofNodes[proofNodes.length - 1].id + 1; //Ensure we never have conflicting node IDs if nodes are deleted
+            this.name = name == "" ? this.id : name; //use the ID as the name if none is provided
+            this.justification = justification;
+            this.expression = expression;
+            this.assumptions = new Set(); 
+
+            this.children = [];
+            this.parents = [];
+
+            //Only relevant to drawing, ignore
+            this.verified = false;
+            this.boundingBox = null; //Set by draw calls
+            this.topAnchor = null;
+            this.botAnchor = null;
+            this.position = position;
+        }
+    }
+
+    _default_constructor(){
+        this.id = null;
+        this.name = null;
+        this.justification = null;
+        this.expression = null;
+        this.assumptions = new Set();
         this.children = [];
         this.parents = [];
-
-        //Only relevant to drawing, ignore
         this.verified = false;
         this.boundingBox = null; //Set by draw calls
         this.topAnchor = null;
         this.botAnchor = null;
-        this.position = position;
+        this.position = null;
     }
-}
-
-function verifyNode(node){
-    return false;
 }
 
 function verifyNodes(node, visited=[]){
@@ -81,4 +97,59 @@ function lookupNode(name) {
         }
     }
     return null;
+}
+
+function stateToJSON(){
+    let proofNodesJSON = []
+    for(node of proofNodes){
+        proofNodesJSON.push({
+            "id": node.id,
+            "name" : node.name,
+            "expression": node.expression.toExpressionString(),
+            "justification": node.justification,
+            "position": node.position,
+        });
+    }
+    let proofLinksJSON = proofLinks.map(x => [x[0].id, x[1].id]);
+    return JSON.stringify({
+        "nodes":proofNodesJSON,
+        "links":proofLinksJSON
+    });
+}
+
+function stateFromJSON(jsonString){
+    proofNodes = [];
+    proofLinks = [];
+    jsonObject = JSON.parse(jsonString);
+
+    //construct our nodes
+    nodes = jsonObject["nodes"];
+    idToNode = {} //Extreamly helpful for links later
+    for(node of nodes){
+        let newProofNode = new ProofNode();
+        newProofNode.id = node["id"];
+        newProofNode.name = node["name"];
+        newProofNode.justification = node["justification"];
+        newProofNode.expression = new SExpression(node["expression"]);
+        newProofNode.position = node["position"];
+        proofNodes.push(newProofNode);
+        idToNode[newProofNode.id] = newProofNode;
+    }
+
+    //Construct our links
+    links = jsonObject["links"];
+    for(link of links){
+        proofLinks.push([idToNode[link[0]], idToNode[link[1]]]);
+        idToNode[link[0]].children.push(idToNode[link[1]]);
+        idToNode[link[1]].parents.push(idToNode[link[0]]);
+    }
+
+    //Verify everything we have imported from the top down
+    for(node of proofNodes){
+        if(node.parents.length == 0){
+            verifyNodes(node);
+        }
+    }
+
+    drawState();
 }

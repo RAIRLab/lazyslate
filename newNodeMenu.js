@@ -68,7 +68,9 @@ function onEditNodeButtonPress(){
     node.position.y = parseInt(document.getElementById("Y-input").value);
     node.justification = document.getElementById("justification-input").value;
     node.expression = new SExpression(document.getElementById("formula-input").value);
+    node.assumptions = new Set();
     closeNewNodeMenu();
+    verifyNodes(node);
     drawState();
 }
 

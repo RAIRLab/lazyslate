@@ -490,7 +490,7 @@ function verifyNotIntro(node) {
     let assumption_name = null;
     let assumption_name_parent_ind = null;
     for (let idx = 0; idx < 2; idx++) {
-        for (const name of node.parents[0]) {
+        for (const name of node.assumptions) {
             let assumption_node = lookupNode(name);
             if (assumption_node.expression.equals(node.expression.children[0])) {
                 assumption_name = name;

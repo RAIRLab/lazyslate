@@ -122,7 +122,7 @@ function drawNode(node){
     const baseY = node.position.y - worldYOffset;
     
     //Compute the width of our node based on text on the node
-    const assumptionsString = "{" + node.assumptions.toString() + "}";
+    const assumptionsString = "{" + Array.from(node.assumptions).toString() + "}";
     const width = 2*padding + Math.max(
         ctx.measureText(node.expression.toString()).width,
         ctx.measureText(node.name).width,

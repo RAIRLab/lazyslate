@@ -94,7 +94,7 @@ class SExpression{
         }else{
             let string = "("+ this.value + " ";
             for(let child of this.children){
-                string += child.toSExpressionString() + " ";
+                string += child.toExpressionString() + " ";
             }
             return string.slice(0, -1) + ")";
         }

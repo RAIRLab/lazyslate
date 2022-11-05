@@ -9,7 +9,7 @@ class ProofNode{
         this.name = name == "" ? this.id : name; //use the ID as the name if none is provided
         this.justification = justification;
         this.expression = expression;
-        this.assumptions = [this.name]; //Until the node is connected to something, its only assumption is itself
+        this.assumptions = new Set(); //Until the node is connected to something, its only assumption is itself
 
         this.children = [];
         this.parents = [];
@@ -49,4 +49,13 @@ function deleteLink(fromNode, toNode){
     fromNode.children = fromNode.children.filter(n=>toNode.id != n.id);
     toNode.parents = toNode.parents.filter(n=>fromNode.id != n.id);
     proofLinks = proofLinks.filter(n=> !(n[0].id == fromNode.id && n[1].id == toNode.id));
+}
+
+function lookupNode(name) {
+    for (const node of proofNodes) {
+        if (name == node.name) {
+            return node;
+        }
+    }
+    return null;
 }

@@ -18,7 +18,7 @@ window.addEventListener('load', function() {
 
     //Setup our event listeners for different interactions with the canvas
     canvas.addEventListener('dblclick', onDoubleClick);
-    canvas.addEventListener('keydown', onKeyPress);
+    window.addEventListener('keydown', onKeyDown);
     canvas.addEventListener('mousemove', onMouseMove);
     canvas.addEventListener('mousedown', onMouseDown);
     canvas.addEventListener('mouseup', onMouseUp);
@@ -31,12 +31,18 @@ function onMouseDown(event){
     let posX = event.offsetX + worldXOffset;
     let posY = event.offsetY + worldYOffset;
     let pos = {x: posX, y: posY};
-    if(event.ctrlKey && selectedNode){
-        createLink()
+    if(event.ctrlKey && selectedNode != null){
+        let fromNode = selectedNode;
+        let toNode = getClickedNode(pos);
+        if(fromNode.id != toNode.id){
+            if(fromNode.children.filter(x=>x.id == toNode.id).length > 0) //If we are already connected, delete the link
+                deleteLink(fromNode, toNode);
+            else
+                createLink(fromNode, toNode);
+        }
     }else{
         selectedNode = getClickedNode(pos);
     }
-    
     drawState();
 }
 
@@ -62,8 +68,20 @@ function onMouseMove(event){
     }
 }
 
-function onKeyPress(event){
-
+function onKeyDown(event){
+    if(document.getElementById("new-node-menu").style.display == "none"){ //Only process if the menu is hidden
+        if(selectedNode != null && event.key === "Backspace" || event.key === "Delete"){
+            deleteNode(selectedNode);
+            selectedNode = null;
+            drawState();
+        }else if(selectedNode != null && event.key === "d"){
+            let newPosition = {x: selectedNode.position.x + 100, y: selectedNode.position.y + 100};
+            let newExpression = new SExpression(selectedNode.expression.toExpressionString());
+            createNode(selectedNode.name, selectedNode.justification, newExpression, newPosition);
+            selectedNode = null;
+            drawState();
+        }
+    }
 }
 
 function onDoubleClick(event){
@@ -71,8 +89,10 @@ function onDoubleClick(event){
     let posY = event.offsetY + worldYOffset;
     let pos = {x: posX, y: posY};
     let clickedNode = getClickedNode(pos);
-    if(clickedNode == null){
+    if(clickedNode == null){    //If the user double clicks a node, we open the edit menu, otherwise if they double click emptyness, we make a new node there
         openNewNodeMenu(pos);
+    }else{
+        openEditNodeMenu(clickedNode);
     }
 }
 
@@ -112,6 +132,8 @@ function drawNode(node){
     //Draw the node body and compute our bounding box for future clicks
     ctx.strokeStyle = selectedNode != null && selectedNode.id == node.id ? "Indigo" : "Black";
     ctx.fillStyle = selectedNode != null && selectedNode.id == node.id ? "Lavender" : "white";
+    ctx.beginPath();
+    //ctx.rect(baseX, baseY, width, 3*fontHeight + 2*padding);
     ctx.roundRect(baseX, baseY, width, 3*fontHeight + 2*padding, padding);
     node.boundingBox = {
         x0: baseX + worldXOffset,
@@ -125,6 +147,7 @@ function drawNode(node){
     //Draw the hat
     const hatText = inferenceRuleSymbols[node.justification];
     const hatWidth = ctx.measureText(hatText).width + 2*padding;
+    //ctx.rect(baseX + (width - hatWidth)/2, baseY - (2*fontHeight + 2*padding), hatWidth, fontHeight + 2*padding, padding);
     ctx.roundRect(baseX + (width - hatWidth)/2, baseY - (2*fontHeight + 2*padding), hatWidth, fontHeight + 2*padding, padding);
     ctx.fill();
     ctx.stroke();
@@ -132,6 +155,9 @@ function drawNode(node){
     ctx.moveTo(baseX + width/2, baseY - fontHeight);
     ctx.lineTo(baseX + width/2, baseY);
     ctx.stroke();
+
+    node.topAnchor = {x: baseX + width/2 + worldXOffset, y: baseY - (2*fontHeight + 2*padding) + worldYOffset}
+    node.botAnchor = {x: baseX + width/2 + worldXOffset, y: baseY + 3*fontHeight + 2*padding + worldYOffset}
 
     //Draw the text on the node
     ctx.fillStyle = selectedNode != null && selectedNode.id == node.id ? "Indigo" : "Black";
@@ -141,13 +167,20 @@ function drawNode(node){
     ctx.fillText(hatText, baseX + (width - hatWidth)/2 + padding, baseY - (fontHeight + padding));
 }
 
+function drawLink(fromNode, toNode){
+    ctx.beginPath();
+    ctx.moveTo(fromNode.botAnchor.x - worldXOffset, fromNode.botAnchor.y - worldYOffset);
+    ctx.lineTo(toNode.topAnchor.x - worldXOffset, toNode.topAnchor.y - worldYOffset);
+    ctx.stroke();
+}
+
 function drawState(){
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     for(node of proofNodes){
         drawNode(node);
     }
     for(link of proofLinks){
-        drawLink(link);
+        drawLink(link[0], link[1]);
     }
 }
 

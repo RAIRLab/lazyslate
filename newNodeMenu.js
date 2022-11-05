@@ -21,8 +21,27 @@ window.addEventListener('load', function() {
 function openNewNodeMenu(position){
     document.getElementById("canvas-blocker").style.display = "inline";
     document.getElementById("new-node-menu").style.display = "inline";
+    document.getElementById("create-node-button").style.display = "inline";
+    document.getElementById("edit-node-button").style.display = "none";
+    document.getElementById("id-input").style.display = "none";
+    document.getElementById("name-input").value = "";
     document.getElementById("X-input").value = position.x;
     document.getElementById("Y-input").value = position.y;
+}
+
+function openEditNodeMenu(node){
+    document.getElementById("canvas-blocker").style.display = "inline";
+    document.getElementById("new-node-menu").style.display = "inline";
+    document.getElementById("create-node-button").style.display = "none";
+    document.getElementById("edit-node-button").style.display = "inline";
+    document.getElementById("id-input").style.display = "inline";
+    document.getElementById("id-input").value = node.id;
+    document.getElementById("name-input").value = node.name;
+    document.getElementById("X-input").value = node.position.x;
+    document.getElementById("Y-input").value = node.position.y;
+    document.getElementById("justification-input").value = node.justification;
+    document.getElementById("formula-input").value = node.expression.toExpressionString();
+    formulaInput();
 }
 
 //Trigged when someone double clicks the close button
@@ -38,6 +57,17 @@ function onCreateNodeButtonPress(){
     let position = {x: parseInt(document.getElementById("X-input").value), y: parseInt(document.getElementById("Y-input").value)};
     let sExpression = new SExpression(document.getElementById("formula-input").value);
     createNode(name, justification, sExpression, position);
+    closeNewNodeMenu();
+    drawState();
+}
+
+function onEditNodeButtonPress(){
+    let node = proofNodes.filter(x=>document.getElementById("id-input").value == x.id)[0];
+    node.name = document.getElementById("name-input").value;
+    node.position.x = parseInt(document.getElementById("X-input").value);
+    node.position.y = parseInt(document.getElementById("Y-input").value);
+    node.justification = document.getElementById("justification-input").value;
+    node.expression = new SExpression(document.getElementById("formula-input").value);
     closeNewNodeMenu();
     drawState();
 }

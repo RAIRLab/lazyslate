@@ -52,7 +52,7 @@ class SExpression{
         return this.value;
     }
 
-    getValue(){
+    getChildren(){
         return this.children;
     }
 
@@ -71,7 +71,7 @@ class SExpression{
         }
         if(this.children.length == 0){
             return this.value;
-        }else if(this.children.length == 1 && logicalOperatorNames.includes(this.value)){
+        }else if(this.children.length == 1 && logicalOperatorNames.includes(this.value) && this.value == "not"){ //Eventually we should specify unary operators in settings
             return logicalOperatorSymbols[this.value] + this.children[0].toString(_depth + 1); 
         }else if(this.children.length == 2 && logicalOperatorNames.includes(this.value)){
             let string = this.children[0].toString(_depth + 1) + " " + logicalOperatorSymbols[this.value] + " " + this.children[1].toString(_depth + 1); 
@@ -83,6 +83,18 @@ class SExpression{
             let string = this.value + "(";
             for(let child of this.children){
                 string += child.toString(_depth + 1) + ",";
+            }
+            return string.slice(0, -1) + ")";
+        }
+    }
+
+    toExpressionString(){
+        if(this.children.length == 0){
+            return this.value;
+        }else{
+            let string = "("+ this.value + " ";
+            for(let child of this.children){
+                string += child.toSExpressionString() + " ";
             }
             return string.slice(0, -1) + ")";
         }

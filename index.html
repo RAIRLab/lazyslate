@@ -15,6 +15,7 @@
     <body>
         <!--The Main Menu for adding nodes-->
         <div id="new-node-menu">
+            <input id="id-input" type="number" readonly disabled>
             <input id="name-input" type="text" placeholder="Name (NodeID if blank)"/>
             <input id="X-input" type="number" placeholder="X"/>
             <input id="Y-input" type="number" placeholder="Y"/>
@@ -24,6 +25,7 @@
             <!--options will be automatically inserted by the script-->
             <select id="justification-input"></select>
             <p id="formula-output">Formula Output</p>
+            <button id="edit-node-button" onclick="onEditNodeButtonPress()">Edit Node</button>
             <button id="create-node-button" onclick="onCreateNodeButtonPress()">Create Node</button>
             <button id="exit-new-node-menu-button" onclick="closeNewNodeMenu()">Cancel</button>
         </div>

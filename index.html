@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Lazyslate</title>
+
+        <!--Includes-->
+        <script src="settings.js"></script>
+        <script src="sexpression.js"></script>
+        <script src="main.js"></script>
+        <link href="style.css" rel="stylesheet">
+    </head>
+    <body>
+        <!--The Main Menu for adding nodes-->
+        <div id="new-node-menu">
+            <button id="exit-new-node-menu" onclick="closeMenu()">X</button>
+            <p>Enter A Logical S-Expression here (You can read more about the supported expression format here <a href="S-Expressions.md">here</a>)</p>
+            <textarea oninput="formulaInput()" id="formula-input" autocorrect="off" spellcheck="false" placeholder="Logical S-Expression goes here"></textarea>
+            <p>Select the Justification (Inference Rule)</p>
+            <!--options will be automatically inserted by the script-->
+            <select id="justification-input"></select>
+            <p id="formula-output">Formula Output</p>
+            <button id="create-node-button" onclick="createNode()">Create Node</button>
+        </div>
+
+        <!--The main HTML Canvas-->
+        <canvas id="proof-canvas"></canvas>
+    </body>
+</html>

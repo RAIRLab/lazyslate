@@ -144,7 +144,8 @@ function verifyIfIntro(node) {
     }
 
     // Make sure parent is the consequence
-    if (!this.children[1].expression.equals(parent.expression)) {
+    let parent = node.parents[0];
+    if (!node.expression.children[1].equals(parent.expression)) {
         return false;
     }
 
@@ -152,8 +153,8 @@ function verifyIfIntro(node) {
     let antecedant_matched = false;
     let antecedant_name = null;
     for (const name of parent.assumptions) {
-        assumption_node = lookupNode(name);
-        if (assumption_node.expression.equals(node.expression.children[1])) {
+        let assumption_node = lookupNode(name);
+        if (assumption_node.expression.equals(node.expression.children[0])) {
             antecedant_matched = true;
             antecedant_name = name;
         }

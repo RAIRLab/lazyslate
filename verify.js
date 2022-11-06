@@ -183,14 +183,14 @@ function verifyIfElim(node) {
     }
 
     // Second parent is the antecedant of the first
-    let match1 = is_if_expression(node.parents[0]) &&
-        node.parents[1].expression.equals(node.parent[0].expression.children[0]);
+    let match1 = is_if_expression(node.parents[0].expression) &&
+        node.parents[1].expression.equals(node.parents[0].expression.children[0]);
 
     // First parent is the antecedant of the second
-    let match2 = is_if_expression(node.parents[1]) &&
+    let match2 = is_if_expression(node.parents[1].expression) &&
         node.parents[0].expression.equals(node.parents[1].expression.children[0])
 
-    if (!match1 && !match2) {
+    if (match1 == false && match2 == false) {
         return false;
     }
 

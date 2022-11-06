@@ -226,19 +226,19 @@ function verifyIffIntro(node) {
     // Match left and right side of Iff to a parent
     let leftParent = null;
     let rightParent = null;
-    if (node.parents[0].equals(node.expression.children[0])) {
+    if (node.parents[0].expression.equals(node.expression.children[0])) {
         leftParent = node.parents[0];
-        if (!node.parents[1].equals(node.expression.children[1])) {
+        if (!node.parents[1].expression.equals(node.expression.children[1])) {
             return false;
         }
         rightParent = node.parents[1];
     } else {
-        if (!node.parents[0].equals(node.expression.children[1])) {
+        if (!node.parents[0].expression.equals(node.expression.children[1])) {
             return false;
         }
         rightParent = node.parents[0];
 
-        if (!node.parents[1].equals(node.expression.children[0])) {
+        if (!node.parents[1].expression.equals(node.expression.children[0])) {
             return false;
         }
         leftParent = node.parents[1];
@@ -434,7 +434,7 @@ function verifyOrElim(node) {
         }
     }
 
-    if (conjunctl_idx === null && conjunctr_idx === null) {
+    if (conjunctl_idx === null || conjunctr_idx === null) {
         return false;
     }
 

@@ -1,4 +1,9 @@
 
+#header{
+    display: inline-block;
+    background-color: blanchedalmond;
+    padding: 20px;
+}
 
 #proof-canvas{
     position: absolute;

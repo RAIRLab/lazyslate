@@ -2,35 +2,43 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Lazyslate</title>
+        <title>LazySlate</title>
 
         <!--Includes-->
-        <script src="settings.js"></script>
-        <script src="sexpression.js"></script>
-        <script src="state.js"></script>
-        <script src="newNodeMenu.js"></script>
-        <script src="proofCanvas.js"></script>
-        <script src="verify.js"></script>
+        <script src="settings.js"></script>     <!-- List of operators and inference rules -->
+        <script src="sexpression.js"></script>  <!-- S-Expression Helper -->
+        <script src="verify.js"></script>       <!-- Verification code -->
+        <script src="state.js"></script>        <!-- Global Application State  -->
+        <script src="header.js"></script>       <!-- Header Menu Controls -->
+        <script src="newNodeMenu.js"></script>  <!-- Node Creation/Editing Menu Controls -->
+        <script src="proofCanvas.js"></script>  <!-- Main Canvas drawing and event controls -->
         <link href="style.css" rel="stylesheet">
     </head>
     <body>
+        <!--The header menu-->
+        <header id="header">
+            <label for="proof-file-input">Upload Proof File</label>
+            <input onchange="onProofFileUpload()" id="proof-file-input" name="proof-file-input" type="file"/>
+            <button onclick="onDownloadButtonPress()">Download Proof</button>
+        </header>
         <!--The Main Menu for adding nodes-->
         <div id="new-node-menu">
-            <input id="id-input" type="number" readonly disabled>
+            <input id="id-input" type="number" readonly disabled> <!--Only visible from edit menu-->
             <input id="name-input" type="text" placeholder="Name (NodeID if blank)"/>
             <input id="X-input" type="number" placeholder="X"/>
             <input id="Y-input" type="number" placeholder="Y"/>
             <p>Enter A Logical S-Expression here (You can read more about the supported expression format here <a href="S-Expressions.md">here</a>)</p>
             <textarea oninput="formulaInput()" id="formula-input" autocorrect="off" spellcheck="false" placeholder="Logical S-Expression goes here"></textarea>
             <p>Select the Justification (Inference Rule)</p>
-            <!--options will be automatically inserted by the script-->
+            <!--options will be automatically inserted by the script in newNodeMenu.js based on rules in settings.js-->
             <select id="justification-input"></select>
             <p id="formula-output">Formula Output</p>
-            <button id="edit-node-button" onclick="onEditNodeButtonPress()">Edit Node</button>
-            <button id="create-node-button" onclick="onCreateNodeButtonPress()">Create Node</button>
+            <button id="edit-node-button" onclick="onEditNodeButtonPress()">Edit Node</button> <!--Only visible from edit menu-->
+            <button id="create-node-button" onclick="onCreateNodeButtonPress()">Create Node</button> <!--Only visible from new node menu-->
             <button id="exit-new-node-menu-button" onclick="closeNewNodeMenu()">Cancel</button>
         </div>
-        <div id="canvas-blocker"></div>
+
+        <div id="canvas-blocker"></div> <!--visible when node menu is open to prevent clicks on the canvas-->
         <!--The main HTML Canvas-->
         <canvas id="proof-canvas"></canvas>
     </body>

@@ -24,6 +24,24 @@ window.addEventListener('load', function() {
     canvas.addEventListener('mouseup', onMouseUp);
 });
 
+
+//================================ Helpers =========================================
+
+
+//Takes a world position and returns the clicked node, or null if no node is at that position
+function getClickedNode(position){
+    //Checks the bounding boxes of all the nodes computed in draw
+    for(node of proofNodes){
+        bb = node.boundingBox; 
+        if(bb.x0 < position.x && position.x < bb.x1 &&
+           bb.y0 < position.y && position.y < bb.y1){
+            return node;
+        }
+    }
+    return null;
+}
+
+
 //=============================== Event Handlers ===================================
 
 function onMouseDown(event){
@@ -37,7 +55,7 @@ function onMouseDown(event){
         if(fromNode.id != toNode.id){
             if(fromNode.children.filter(x=>x.id == toNode.id).length > 0) //If we are already connected, delete the link
                 deleteLink(fromNode, toNode);
-            else
+            else                                                        //If we are not connected create a link between the nodes
                 createLink(fromNode, toNode);
         }
     }else{
@@ -95,20 +113,6 @@ function onDoubleClick(event){
         openEditNodeMenu(clickedNode);
     }
 }
-
-//================================ Helpers =========================================
-
-function getClickedNode(position){
-    for(node of proofNodes){
-        bb = node.boundingBox;
-        if(bb.x0 < position.x && position.x < bb.x1 &&
-           bb.y0 < position.y && position.y < bb.y1){
-            return node;
-        }
-    }
-    return null;
-}
-
 
 //================================= Drawing ========================================
 

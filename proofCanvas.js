@@ -88,14 +88,16 @@ function onMouseMove(event){
 
 function onKeyDown(event){
     if(document.getElementById("new-node-menu").style.display == "none"){ //Only process if the menu is hidden
-        if(selectedNode != null && event.key === "Backspace" || event.key === "Delete"){
+        if(selectedNode != null && event.key === "Backspace" || event.key === "Delete"){ //Delete node
             deleteNode(selectedNode);
             selectedNode = null;
             drawState();
-        }else if(selectedNode != null && event.key === "d"){
-            let newPosition = {x: selectedNode.position.x + 100, y: selectedNode.position.y + 100};
+        }
+        else if(selectedNode != null && event.key === "d"){ //Duplicate Node
+            let newName = selectedNode.name == selectedNode.id ? "" : selectedNode.name; //use a new ID if not named by user
+            let newPosition = {x: selectedNode.position.x + 100, y: selectedNode.position.y + 100}; //create the node at a small offet 
             let newExpression = new SExpression(selectedNode.expression.toExpressionString());
-            createNode(selectedNode.name, selectedNode.justification, newExpression, newPosition);
+            createNode(newName, selectedNode.justification, newExpression, newPosition);
             selectedNode = null;
             drawState();
         }

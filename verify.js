@@ -389,10 +389,10 @@ function verifyOrElim(node) {
     let parentInd2 = null;
     let parentInd3 = null;
 
-    for (let i = 0; i < node.parents; i++) {
+    for (let i = 0; i < node.parents.length; i++) {
         let parent = node.parents[i];
         if (parent.expression.equals(node.expression)) {
-            if (parentInd2 !== null) {
+            if (parentInd2 == null) {
                 parentInd2 = i;
             } else {
                 parentInd3 = i;
@@ -440,15 +440,15 @@ function verifyOrElim(node) {
 
     // Update Assumptions
     node.assumptions = new Set();
-    for (const name of node.parents[orParentInd]) {
+    for (const name of node.parents[orParentInd].assumptions) {
         node.assumptions.add(name);
     }
-    for (const name of node.parents[conjunctl_idx]) {
+    for (const name of node.parents[conjunctl_idx].assumptions) {
         if (name != conjunctl_assumption_name) {
             node.assumptions.add(name);
         }
     }
-    for (const name of node.parents[conjunctr_idx]) {
+    for (const name of node.parents[conjunctr_idx].assumptions) {
         if (name != conjunctr_assumption_name) {
             node.assumptions.add(name);
         }
@@ -541,9 +541,10 @@ function verifyNotElim(node) {
     let assumption_name = null;
     let assumption_name_parent_ind = null;
     for (let idx = 0; idx < 2; idx++) {
-        for (const name of node.parents[0]) {
+        for (const name of node.parents[idx].assumptions) {
             let assumption_node = lookupNode(name);
-            if (is_not_expression(assumption_node.expression) && assumption_node.expression.children[0].equal(node.expression)) {
+            if (is_not_expression(assumption_node.expression) &&
+            new SExpression("(not " + node.expression.toExpressionString() + ")").equals(assumption_node.expression)) {
                 assumption_name = name;
                 assumption_name_parent_ind = idx;
                 break;

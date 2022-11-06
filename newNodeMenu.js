@@ -14,6 +14,8 @@ window.addEventListener('load', function() {
 
     //disable the canvas blocker
     document.getElementById("canvas-blocker").style.display = "none";
+    //This has to be done because otherwise style.display is an empty string despiet the css and it messes with controlls that check this to see if they can activate
+    document.getElementById("new-node-menu").style.display = "none";
 })
 
 //Trigged when someone double clicks a blank area of the canvas

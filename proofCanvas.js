@@ -73,7 +73,13 @@ function onMouseUp(event){
     drawState();
 }
 
+
 function onMouseMove(event){
+    //Sometimes if the mouse leaves the canvas, the onMouseUp event never fires and it could get stuck in drag mode 
+    //To fix that we check to make sure a mouse button is being pressed when the mouse reenteres.
+    if(event.buttons == 0){ 
+        mousedown = false;
+    }
     if(mousedown){
         if(selectedNode){   //If we start dragging over a node, move the node with the mouse
             selectedNode.position.x += event.movementX;

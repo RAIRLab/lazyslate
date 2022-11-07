@@ -303,21 +303,29 @@ function verifyIffElim(node) {
 
     // Find which parent matches the current node
     let parentMatchInd = null;
-    if (node.parents[0].expression.equal(node.expression)) {
+    if (
+        is_iff_expression(node.parents[0].expression) &&
+        (node.parents[0].expression.children[0].equals(node.expression) ||
+        node.parents[0].expression.children[1].equals(node.expression))
+    ){
         parentMatchInd = 0;
-    } else if (node.parents[1].expression.equal(node.expression)) {
+    } else if (
+        is_iff_expression(node.parents[1].expression) &&
+        (node.parents[1].expression.children[0].equals(node.expression) ||
+        node.parents[1].expression.children[1].equals(node.expression))
+    ){
         parentMatchInd = 1;
     } else {
         return false;
     }
 
-    if (parentMatchInd == 0) {
+    if (parentMatchInd == 1) {
         // First parent is either the antecedant
         // or consequent of the second parent.
-        let syntax_check1 = is_iff_expression(node.parents[1]) &&
+        let syntax_check1 = is_iff_expression(node.parents[1].expression) &&
         (
-            node.parents[0].expression.equal(node.parents[1].expression.children[0]) ||
-            node.parents[0].expression.equal(node.parents[1].expression.children[1])
+            node.parents[0].expression.equals(node.parents[1].expression.children[0]) ||
+            node.parents[0].expression.equals(node.parents[1].expression.children[1])
         );
         if (!syntax_check1) {
             return false;
@@ -325,10 +333,10 @@ function verifyIffElim(node) {
     } else {
         // Second parent is either the antecedant
         // or consequent of the first parent
-        let syntax_check1 = is_iff_expression(node.parents[0]) &&
+        let syntax_check1 = is_iff_expression(node.parents[0].expression) &&
         (
-            node.parents[1].expression.equal(node.parents[0].expression.children[0]) ||
-            node.parents[1].expression.equal(node.parents[0].expression.children[1])
+            node.parents[1].expression.equals(node.parents[0].expression.children[0]) ||
+            node.parents[1].expression.equals(node.parents[0].expression.children[1])
         );
         if (!syntax_check1) {
             return false;

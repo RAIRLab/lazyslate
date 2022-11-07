@@ -5,6 +5,7 @@ let canvas = null;
 
 let mousedown = false;  //if the mouse button is down or up
 let selectedNode = null;
+let selectedNodes = [];
 
 //The offset coordinates of our window into the proof graph world (How much we have dragged the window)
 let worldXOffset = 0, worldYOffset = 0;
@@ -18,10 +19,11 @@ window.addEventListener('load', function() {
 
     //Setup our event listeners for different interactions with the canvas
     canvas.addEventListener('dblclick', onDoubleClick);
-    window.addEventListener('keydown', onKeyDown);
     canvas.addEventListener('mousemove', onMouseMove);
     canvas.addEventListener('mousedown', onMouseDown);
     canvas.addEventListener('mouseup', onMouseUp);
+    window.addEventListener('keydown', onKeyDown);      //Canvas does not have a keydown
+    window.addEventListener('resize', onResize);
 });
 
 
@@ -120,6 +122,14 @@ function onDoubleClick(event){
     }else{
         openEditNodeMenu(clickedNode);
     }
+}
+
+function onResize(event){
+    canvas = document.getElementById("proof-canvas");
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+    ctx = canvas.getContext("2d");
+    drawState();
 }
 
 //================================= Drawing ========================================

@@ -23,7 +23,7 @@ function onGetLinkButtonPress(){
     const compressedFileContents = LZString.compressToEncodedURIComponent(fileContents);
     const URIEncodedCompressedFileContents = compressedFileContents.replace("-", "%2D");
     const lazyslateHost = window.location.href.split("?")[0];
-    const url = lazyslateHost + "?proof=" + compressedFileContents;
+    const url = lazyslateHost + "?proof=" + URIEncodedCompressedFileContents;
     navigator.clipboard.writeText(url);
 }
 

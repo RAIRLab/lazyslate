@@ -13,15 +13,23 @@ function download(filename, text) {
 }
 
 function onDownloadButtonPress(){
-    let fileContents = stateToJSON();
-    let fileName = new Date().getTime()+".json";
+    const fileContents = stateToJSON();
+    const fileName = new Date().getTime()+".json";
     download(fileName, fileContents);
+}
+
+function onGetLinkButtonPress(){
+    const fileContents = stateToJSON();
+    const compressedFileContents = LZString.compressToEncodedURIComponent(fileContents);
+    const lazyslateHost = window.location.href.split("?")[0];
+    const url = lazyslateHost + "?proof=" + compressedFileContents;
+    navigator.clipboard.writeText(url);
 }
 
 function onProofFileUpload(){
     let file = document.getElementById('proof-file-input').files[0];
     let reader = new FileReader();
-    reader.addEventListener("load", ()=>{stateFromJSON(reader.result)}, false);
+    reader.addEventListener("load", ()=>{setStateFromJSON(reader.result)}, false);
     reader.readAsText(file);
 }
 

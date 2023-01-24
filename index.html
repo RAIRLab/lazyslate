@@ -3,6 +3,9 @@
     <head>
         <meta charset="UTF-8">
         <title>LazySlate</title>
+        
+        <!--Libraries-->
+        <script src="libs/lz-string.min.js"></script>  <!-- Compression Library -->
 
         <!--Includes-->
         <script src="settings.js"></script>     <!-- List of operators and inference rules -->
@@ -20,6 +23,7 @@
             <label for="proof-file-input">Upload Proof File</label>
             <input onchange="onProofFileUpload()" id="proof-file-input" name="proof-file-input" type="file"/>
             <button onclick="onDownloadButtonPress()">Download Proof</button>
+            <button onclick="onGetLinkButtonPress()">Copy Link To Proof</button>
         </header>
         <!--The Main Menu for adding nodes-->
         <div id="new-node-menu">

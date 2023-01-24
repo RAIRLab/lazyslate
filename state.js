@@ -153,16 +153,3 @@ function setStateFromJSON(jsonString){
 
     drawState();
 }
-
-//=============================================================================
-//Event Handlers
-
-window.addEventListener('load', function() {
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    if(urlParams.has("proof")){
-        const compressedProof = urlParams.get("proof");
-        const jsonProof = LZString.decompressFromEncodedURIComponent(compressedProof);
-        setStateFromJSON(jsonProof);
-    }
-});

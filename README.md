@@ -83,5 +83,11 @@ You can read more about how to read and write S-expressions are represented in o
 
 ### Proof Sharing
 
-Lazyslate can store proofs as `.json` files by clicking the Download Proof button.
+#### Downloading As JSON files
+Lazyslate can save proofs as `.json` files by clicking the "Download Proof" button.
 Proofs can be uploaded by clicking the Choose File button and selecting the file.
+
+#### Link Sharing
+Alternatively to downloading, links to proofs can be generated via the "Copy Link To Proof" button.
+This will generate an lz compressed version of the JSON proof as a URI parameter that will be 
+decompressed and loaded when the link is clicked.

@@ -17,7 +17,6 @@ Some of these inference rules may not be in a form familiar to some readers, par
 introduction and elimination.
 
 We enumerate all of our inference rules here.
-
 ```
 Negation Introduction (Reductio ad absurdum):
 A |- B
@@ -78,6 +77,9 @@ A             B
 B             A
 
 ```
+
+Formula representation and input by the user is done via S-Expressions. 
+You can read more about how to read and write S-expressions are represented in our `S-Expressions.md`.
 
 ### Proof Sharing
 

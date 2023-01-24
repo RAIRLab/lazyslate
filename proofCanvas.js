@@ -24,6 +24,15 @@ window.addEventListener('load', function() {
     canvas.addEventListener('mouseup', onMouseUp);
     window.addEventListener('keydown', onKeyDown);      //Canvas does not have a keydown
     window.addEventListener('resize', onResize);
+
+    //Load the proof encoded in the URL if it exists
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    if(urlParams.has("proof")){
+        const compressedProof = urlParams.get("proof");
+        const jsonProof = LZString.decompressFromEncodedURIComponent(compressedProof);
+        setStateFromJSON(jsonProof);
+    }
 });
 
 

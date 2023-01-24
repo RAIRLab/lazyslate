@@ -30,7 +30,7 @@ window.addEventListener('load', function() {
     const urlParams = new URLSearchParams(queryString);
     if(urlParams.has("proof")){
         const uriEncodedCompressedProof = urlParams.get("proof");
-        const compressedProof = uriEncodedCompressedProof.replace("%2D", "-");
+        const compressedProof = uriEncodedCompressedProof.replaceAll("%2D", "-");
         const jsonProof = LZString.decompressFromEncodedURIComponent(compressedProof);
         setStateFromJSON(jsonProof);
     }

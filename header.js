@@ -21,6 +21,7 @@ function onDownloadButtonPress(){
 function onGetLinkButtonPress(){
     const fileContents = stateToJSON();
     const compressedFileContents = LZString.compressToEncodedURIComponent(fileContents);
+    const URIEncodedCompressedFileContents = compressedFileContents.replace("-", "%2D");
     const lazyslateHost = window.location.href.split("?")[0];
     const url = lazyslateHost + "?proof=" + compressedFileContents;
     navigator.clipboard.writeText(url);

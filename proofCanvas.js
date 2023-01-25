@@ -10,6 +10,23 @@ let selectedNodes = [];
 //The offset coordinates of our window into the proof graph world (How much we have dragged the window)
 let worldXOffset = 0, worldYOffset = 0;
 
+if (CanvasRenderingContext2D.prototype.roundRect == null) {
+    CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
+        if (w < 2 * r) r = w / 2;
+        if (h < 2 * r) r = h / 2;
+        // this.beginPath();
+        this.moveTo(x+r, y);
+        this.arcTo(x+w, y,   x+w, y+h, r);
+        this.arcTo(x+w, y+h, x,   y+h, r);
+        this.arcTo(x,   y+h, x,   y,   r);
+        this.arcTo(x,   y,   x+w, y,   r);
+        // this.closePath();
+        return this;
+      }
+}
+
+
+
 //When the document loads
 window.addEventListener('load', function() {
     canvas = document.getElementById("proof-canvas");
@@ -148,8 +165,8 @@ function onResize(event){
 function drawNode(node){
     const padding = 10;
     ctx.font = "20px Arial";
-    const fontHeight = ctx.measureText(node.name).fontBoundingBoxAscent;
-
+    const fontMetrics = ctx.measureText(node.name);
+    const fontHeight = fontMetrics.actualBoundingBoxAscent + fontMetrics.actualBoundingBoxDescent + 10;
     const baseX = node.position.x - worldXOffset;
     const baseY = node.position.y - worldYOffset;
     

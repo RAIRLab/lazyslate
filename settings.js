@@ -4,8 +4,8 @@ logicalOperatorSymbols = {
     "not" : "\u00AC",
     "and" : "\u2227",
     "or" : "\u2228",
-    "if" : "\u2192",
-    "iff" : "\u2194",
+    "if" : "\u27F6",
+    "iff" : "\u27F7",
     "forall" : "\u2200",
     "exists" : "\u2203",
 };

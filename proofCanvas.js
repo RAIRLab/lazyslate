@@ -166,8 +166,8 @@ function drawNode(node){
     const padding = 10;
     ctx.font = "20px Arial";
     const fontMetrics = ctx.measureText(node.name);
-    const fontHeight = fontMetrics.fontBoundingBoxAscent; 
-    if(fontHeight == undefined){
+    let fontHeight = fontMetrics.fontBoundingBoxAscent;
+    if (fontHeight == undefined) {
         fontHeight = fontMetrics.actualBoundingBoxAscent + fontMetrics.actualBoundingBoxDescent + 4;
     }
     const baseX = node.position.x - worldXOffset;

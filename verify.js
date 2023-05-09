@@ -183,6 +183,14 @@ function verifyIfElim(node) {
         return false;
     }
 
+    // Check that the current node matches the consequent
+    // of the if vertex
+    if (is_if_expression(node.parents[0].expression) && !node.expression.equals(node.parents[0].expression.children[1])) {
+        return false;
+    }  else if  (is_if_expression(node.parents[1].expression) && !node.expression.equals(node.parents[1].expression.children[1])) {
+        return false;
+    }
+
     // Second parent is the antecedant of the first
     let match1 = is_if_expression(node.parents[0].expression) &&
         node.parents[1].expression.equals(node.parents[0].expression.children[0]);
@@ -190,6 +198,8 @@ function verifyIfElim(node) {
     // First parent is the antecedant of the second
     let match2 = is_if_expression(node.parents[1].expression) &&
         node.parents[0].expression.equals(node.parents[1].expression.children[0])
+
+
 
     if (match1 == false && match2 == false) {
         return false;

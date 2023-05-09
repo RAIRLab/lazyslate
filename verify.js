@@ -169,7 +169,7 @@ function verifyIfIntro(node) {
     for (const name of parent.assumptions) {
         // Don't add antecedant assumption
         if (name != antecedant_name) {
-            node.add(name);
+            node.assumptions.add(name);
 
         }
     }

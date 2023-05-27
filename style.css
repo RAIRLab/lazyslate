@@ -1,0 +1,63 @@
+
+#header{
+    display: inline-block;
+    background-color: blanchedalmond;
+    padding: 20px;
+}
+
+#proof-canvas{
+    position: absolute;
+    top:0px;
+    left:0px;
+    z-index: -1;
+}
+
+#canvas-blocker{
+    position: absolute;
+    top:0px;
+    left:0px;
+    width: 100%;
+    height: 100%;
+    
+    z-index: 0; /* Above the proof canvas but under the menu */
+    display: none;
+
+    background-color: grey;
+    opacity: 0.5;
+}
+
+#new-node-menu{
+    /* Positioning */
+    position: absolute;
+    width: 30%; height: 60%;
+    top: 0; bottom: 0; right: 0; left: 0;
+    z-index: 1;
+    margin: auto;
+    padding-left: 5%;
+    padding-right: 5%;
+    padding-top: 2%;
+
+    /* Styling */
+    border-radius: 25px;
+    background-color:aliceblue;
+    display: none;
+}
+
+#formula-input{
+    width: 100%;
+    height: 30%;
+}
+
+#justification-input{
+    width: 100%;
+}
+
+#formula-output{
+    border-radius: 10px;
+    text-align: center;
+    font-size: 2em;
+    font-family: Arial, Helvetica, sans-serif;
+    width: 100%;
+    background-color:gainsboro;
+
+}

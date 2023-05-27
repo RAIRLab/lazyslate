@@ -3,7 +3,7 @@
  * @fileoverview This file specifies an SExpression class for creating and manipulating SExpression formulae.
  */
 
-import * as settings from "settings"
+import {logicalOperatorNames, logicalOperatorSymbols} from "./settings.js"
 
 //This file assumes settings.js has already been imported
  
@@ -96,10 +96,10 @@ export class SExpression{
         }
         if(this.children.length == 0){
             return this.value;
-        }else if(this.children.length == 1 && settings.logicalOperatorNames.includes(this.value) && this.value == "not"){ //Eventually we should specify unary operators in settings
-            return settings.logicalOperatorSymbols[this.value] + this.children[0].toString(_depth + 1); 
-        }else if(this.children.length == 2 && settings.logicalOperatorNames.includes(this.value)){
-            let string = this.children[0].toString(_depth + 1) + " " + settings.logicalOperatorSymbols[this.value] + " " + this.children[1].toString(_depth + 1); 
+        }else if(this.children.length == 1 && logicalOperatorNames.includes(this.value) && this.value == "not"){ //Eventually we should specify unary operators in settings
+            return logicalOperatorSymbols.get(this.value) + this.children[0].toString(_depth + 1); 
+        }else if(this.children.length == 2 && logicalOperatorNames.includes(this.value)){
+            let string = this.children[0].toString(_depth + 1) + " " + logicalOperatorSymbols.get(this.value) + " " + this.children[1].toString(_depth + 1); 
             if(_depth != 0)
                 return "(" + string + ")";
             else

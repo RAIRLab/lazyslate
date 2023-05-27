@@ -15,7 +15,7 @@ export const logicalOperatorSymbols : Map<string, string> = new Map(Object.entri
 }));
 
 /** The list of all supported logical operator names */
-export const logicalOperatorNames : Array<string> = Object.keys(logicalOperatorSymbols);
+export const logicalOperatorNames : Array<string> = Array.from(logicalOperatorSymbols.keys());
 
 /** 
  * A list of all the infrence rules supported, their short names an their full names.
@@ -44,5 +44,11 @@ export const inferenceRules : Array<{name:string,fullname:string}> = [
 export const inferenceRuleSymbols : Map<string, string> = new Map(Object.entries({"assume":"Assume"}));
 for(let i = 1; i < inferenceRules.length; i++){
     let name = inferenceRules[i].name;
-    inferenceRuleSymbols[name] = logicalOperatorSymbols[name.slice(0, -1)]+name.slice(-1);
+    inferenceRuleSymbols.set(name, logicalOperatorSymbols.get(name.slice(0, -1))+name.slice(-1));
 }
+
+//Global export of settings
+window["logicalOperatorSymbols"] = logicalOperatorSymbols;
+window["logicalOperatorNames"] = logicalOperatorNames;
+window["inferenceRules"] = inferenceRules;
+window["inferenceRuleSymbols"] = inferenceRuleSymbols;

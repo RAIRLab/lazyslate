@@ -5,12 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Chromium",
             "type": "chrome",
-            "runtimeExecutable": "/snap/bin/chromium",
             "request": "launch",
+            "name": "Chromium",
+            "runtimeExecutable": "/snap/chromium/2477/usr/lib/chromium-browser/chrome",
+            "runtimeArgs": [],
             "url": "http://localhost:8080",
-            "webRoot": "${workspaceFolder}/build"
+            "file": "${workspaceFolder}/build/index.html"
         }
     ]
 }

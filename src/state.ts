@@ -4,9 +4,9 @@
  * and methods for importing, exporting, and manipulating the global proof state
  */
 
-import { drawState } from "proofCanvas";
-import { SExpression } from "sexpression";
-import { verifyNode } from "verify";
+import { drawState } from "./proofCanvas.js";
+import { SExpression } from "./sexpression.js";
+import { verifyNode } from "./verify.js";
 
 // Global state ========================================================================================================
 //the full list of nodes and the links between them.

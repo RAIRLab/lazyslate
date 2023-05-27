@@ -3,9 +3,9 @@
  * @fileoverview Contains event handlers for items in the header menu
  */
 
-import * as LZString from "./libs/lz-string.min";
+import * as LZString from "./libs/lz-string.min.js";
 
-import { setStateFromJSON, stateToJSON } from "state"
+import { setStateFromJSON, stateToJSON } from "./state.js"
 
 /**
  * Downloads A file to the users computer with the given filename and file contents.
@@ -54,3 +54,7 @@ export function onProofFileUpload() : void{
     reader.readAsText(file);
 }
 
+//global export event handlers
+window["onDownloadButtonPress"] = onDownloadButtonPress;
+window["onGetLinkButtonPress"] = onGetLinkButtonPress;
+window["onProofFileUpload"] = onProofFileUpload;

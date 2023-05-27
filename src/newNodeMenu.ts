@@ -2,10 +2,10 @@
  * @fileoverview Contains code for setup and handlers of events relating to the new node menu and edit node menu
  */
 
-import {Position, ProofNode, createNode, verifyNodes, proofNodes} from "state"
-import {inferenceRules} from "settings"
-import {SExpression} from "sexpression"
-import {drawState} from "proofCanvas"
+import {Position, ProofNode, createNode, verifyNodes, proofNodes} from "./state.js"
+import {inferenceRules} from "./settings.js"
+import {SExpression} from "./sexpression.js"
+import {drawState} from "./proofCanvas.js"
 
 // Initial setup of the menus ==========================================================================================
 
@@ -26,6 +26,18 @@ window.addEventListener('load', function() {
     //This has to be done because otherwise style.display is an empty string despite the css
     // and it messes with controls that check this to see if they can activate
     document.getElementById("new-node-menu").style.display = "none";
+
+    //global export event handelers
+    //window["openNewNodeMenu"] = openNewNodeMenu;
+    //window["openEditNodeMenu"] = openEditNodeMenu;
+    window["closeNewNodeMenu"] = closeNewNodeMenu;
+    window["onCreateNodeButtonPress"] = onCreateNodeButtonPress;
+    window["onEditNodeButtonPress"] = onEditNodeButtonPress;
+    window["onCreateNodeButtonPress"] = onCreateNodeButtonPress;
+    window["onCreateNodeButtonPress"] = onCreateNodeButtonPress;
+    window["formulaInput"] = formulaInput;
+    //window["getInputElementById"] = getInputElementById;
+
 })
 
 // Helpers =============================================================================================================
@@ -83,7 +95,7 @@ export function openEditNodeMenu(node : ProofNode) : void{
 /**
  * Trigged when someone double clicks the close button
  */
-function closeNewNodeMenu() : void{
+export function closeNewNodeMenu() : void{
     document.getElementById("new-node-menu").style.display = "none";
     document.getElementById("canvas-blocker").style.display = "none";
 }
@@ -91,14 +103,14 @@ function closeNewNodeMenu() : void{
 /**
  * Triggered when the create-node-button is pressed in the create node menu
  */
-function onCreateNodeButtonPress() : void{
+export function onCreateNodeButtonPress() : void{
     let name : string = getInputElementById("name-input").value;
-    let justification = getInputElementById("justification-input").value;
+    let justification : string = (<HTMLSelectElement>document.getElementById("justification-input")).value;
     let position : Position = {
         x: parseInt(getInputElementById("X-input").value),
         y: parseInt(getInputElementById("Y-input").value)
     };
-    let sExpression : SExpression = new SExpression(getInputElementById("formula-input").value);
+    let sExpression : SExpression = new SExpression((<HTMLTextAreaElement>document.getElementById("formula-input")).value);
     createNode(name, justification, sExpression, position);
     closeNewNodeMenu();
     drawState();
@@ -107,13 +119,13 @@ function onCreateNodeButtonPress() : void{
 /**
  * Triggered when the edit node button is pressed in the edit node menu
  */
-function onEditNodeButtonPress() : void{
+export function onEditNodeButtonPress() : void{
     let node : ProofNode = proofNodes.filter(x=>getInputElementById("id-input").value == x.id.toString())[0];
     node.name = getInputElementById("name-input").value;
     node.position.x = parseInt(getInputElementById("X-input").value);
     node.position.y = parseInt(getInputElementById("Y-input").value);
-    node.justification = getInputElementById("justification-input").value;
-    node.expression = new SExpression(getInputElementById("formula-input").value);
+    node.justification = (<HTMLSelectElement>document.getElementById("justification-input")).value;
+    node.expression = new SExpression((<HTMLTextAreaElement>document.getElementById("formula-input")).value);
     node.assumptions = new Set();
     closeNewNodeMenu();
     verifyNodes(node);
@@ -123,8 +135,8 @@ function onEditNodeButtonPress() : void{
 /**
  * Trigged when text is typed into the new-node-box or the edit node menu is opened
  */
-function formulaInput(){
-    let inputFormula : string = getInputElementById("formula-input").value;
+export function formulaInput(){
+    let inputFormula : string = (<HTMLTextAreaElement>document.getElementById("formula-input")).value;
     let formulaOutput : HTMLElement = document.getElementById("formula-output");
     let createNodeButton : HTMLButtonElement = <HTMLButtonElement>document.getElementById("create-node-button");
     if(inputFormula == ""){

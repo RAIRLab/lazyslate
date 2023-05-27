@@ -2,17 +2,17 @@
  * @fileoverview This file contains global state for the proof canvas and rendering code of the global proof state
  */
 
-import * as LZString from "./libs/lz-string.min";
+import * as LZString from "./libs/lz-string.min.js";
 
-import {openEditNodeMenu, openNewNodeMenu} from "newNodeMenu";
-import {SExpression} from "./sexpression";
-import {inferenceRuleSymbols} from "./settings";
+import {openEditNodeMenu, openNewNodeMenu} from "./newNodeMenu.js";
+import {SExpression} from "./sexpression.js";
+import {inferenceRuleSymbols} from "./settings.js";
 
 import {
     ProofNode, setStateFromJSON, Position, proofNodes,
     BoundingBox, createLink, deleteLink, deleteNode,
     createNode, proofLinks
-} from "state";
+} from "./state.js";
 
 
 // Global Canvas State =================================================================================================
@@ -266,7 +266,7 @@ function drawNode(node : ProofNode) : void{
     
     //Draw the hat
     ctx.beginPath();
-    const hatText = inferenceRuleSymbols[node.justification];
+    const hatText = inferenceRuleSymbols.get(node.justification);
     const hatWidth = ctx.measureText(hatText).width + 2*padding;
     ctx.strokeStyle = node.verified ? "green" : "red";
     //ctx.rect(baseX + (width - hatWidth)/2, baseY - (2*fontHeight + 2*padding), hatWidth, fontHeight + 2*padding, padding);

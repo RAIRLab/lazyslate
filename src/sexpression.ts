@@ -1,23 +1,35 @@
 
+/**
+ * @fileoverview This file specifies an SExpression class for creating and manipulating SExpression formulae.
+ */
 
 //This file assumes settings.js has already been imported
-
-
+ 
+/** A logical formula tree represented as an SExpression, see https://en.wikipedia.org/wiki/S-expression */
 class SExpression{
-    constructor(sExpressionString){
+    string : string;              //The string representation of the SExpression
+    value : string;               //This is a string representing the logical operation, predicate, or function name
+    children: Array<SExpression>; //This is the list of SExpressions that are children of the node
+
+    /**
+     * Constructs an SExpression tree from an SExpression string. On failiure to parse
+     * will still return an SExpression tree with the value ERROR where any synatx errors were found.
+     * @param sExpressionString the string to parse
+     */
+    constructor(sExpressionString : string){
         this.string = sExpressionString;
-        this.value = null;                  //This is a string representing the logical operation, predicate, or function name
-        this.children = [];                 //This is the list of SExpressions that are children of the node
+        this.value = null;                
+        this.children = []; 
 
         //Parsing 
-        let spacedString = this.string.replaceAll("(", " ( ").replaceAll(")", " ) ").trim();
-        let tokens = spacedString.split(/\s+/); //split on spaces
+        let spacedString : string = this.string.replaceAll("(", " ( ").replaceAll(")", " ) ").trim();
+        let tokens : Array<string> = spacedString.split(/\s+/); //split on spaces
         if(tokens.length == 1 && tokens[0].match(/^[0-9a-zA-Z]+$/)){   //We are a logical constant
             this.value = tokens[0];
         }else if(tokens.length >= 3 && tokens[0] == "(" && tokens[tokens.length - 1] == ")"){  //We are an s-expression
-            let parenthesisCounter = 0;
-            let childExpressions = [];
-            let childExpression = "";
+            let parenthesisCounter : number = 0;
+            let childExpressions : Array<string> = [];
+            let childExpression : string = "";
             for(let i = 2; i < tokens.length-1; i++){ //Find internal top level s-expressions to make children
                 if(tokens[i] == ")"){
                     parenthesisCounter--;
@@ -48,16 +60,22 @@ class SExpression{
         }
     }
 
-    getValue(){
+    /** Gets the value of the SExpression */
+    getValue() : string{
         return this.value;
     }
 
-    getChildren(){
+    /** Gets the children of the SExpression */
+    getChildren() : Array<SExpression>{
         return this.children;
     }
 
-    isValid(){
-        let valid = true;
+    /**
+     * Recursively checks if the SExpression tree was correctly constructed with no errors
+     * @returns true iff constructed with no errors.
+     */
+    isValid() : boolean{
+        let valid : boolean = true;
         valid &&= this.value != "ERROR"
         for(let child of this.children){
             valid &&= child.isValid();
@@ -65,7 +83,12 @@ class SExpression{
         return valid;
     }
 
-    toString(_depth = 0){
+    /**
+     * Converts the SExpression to a unicode logical formula string. NOT an SExpression string.
+     * @param _depth How deep in the SExpression tree we are
+     * @returns A unicode string of the logical formula represented by the SExpression
+     */
+    toString(_depth : number = 0) : string{
         if(this.value == "ERROR"){
             return "ERROR"
         }
@@ -88,7 +111,11 @@ class SExpression{
         }
     }
 
-    toExpressionString(){
+    /**
+     * Converts the SExpression tree to an SExpression string, should be equal to this.string without extra whitespace.
+     * @returns An SExpression string represented by this SExpression.
+     */
+    toExpressionString() : string{
         if(this.children.length == 0){
             return this.value;
         }else{
@@ -100,7 +127,12 @@ class SExpression{
         }
     }
 
-    equals(other) {
+    /**
+     * Recursively checks if two SExpressions are equivelent 
+     * @param other The SExpression to compare against
+     * @returns If the two SExpressions match
+     */
+    equals(other : SExpression) : boolean {
         let values_match = this.value == other.value;
         if (!values_match) {
             return false;

@@ -2,7 +2,18 @@
  * @fileoverview This file contains global state for the proof canvas and rendering code of the global proof state
  */
 
-import * as LZString from "../libs/lz-string.min.js";
+import * as LZString from "./libs/lz-string.min";
+
+import {openEditNodeMenu, openNewNodeMenu} from "newNodeMenu";
+import {SExpression} from "./sexpression";
+import {inferenceRuleSymbols} from "./settings";
+
+import {
+    ProofNode, setStateFromJSON, Position, proofNodes,
+    BoundingBox, createLink, deleteLink, deleteNode,
+    createNode, proofLinks
+} from "state";
+
 
 // Global Canvas State =================================================================================================
 
@@ -290,7 +301,7 @@ function drawLink(fromNode : ProofNode, toNode : ProofNode){
 /**
  * Draws the global proof state with respect to the global canvas state 
  */
-function drawState() : void{
+export function drawState() : void{
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     for(const node of proofNodes){
         drawNode(node);

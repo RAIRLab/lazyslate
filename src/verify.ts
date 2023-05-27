@@ -2,7 +2,10 @@
  * @fileoverview Functions that verify Proof Nodes of diffrent types
  */
 
-function verifyNode(node : ProofNode) : boolean{
+import { ProofNode, lookupNode } from "./state";
+import { SExpression } from "./sexpression";
+
+export function verifyNode(node : ProofNode) : boolean{
     switch(node.justification) {
         case "assume":
             return verifyAssume(node);

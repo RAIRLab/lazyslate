@@ -1,8 +1,9 @@
 {
     "compilerOptions": {
-      "outDir": "./build",
-      "allowJs": true,
-      "target": "ES2021"
+        "outDir": "./build",
+        "allowJs": true,
+        "target": "ES2021",
+        "sourceMap": true
     },
-    "include": ["./lib/**/*", "./src/**/*"]
-  }
+    "include": ["./src/**/*.ts"]
+}

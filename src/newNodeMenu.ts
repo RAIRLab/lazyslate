@@ -2,6 +2,11 @@
  * @fileoverview Contains code for setup and handlers of events relating to the new node menu and edit node menu
  */
 
+import {Position, ProofNode, createNode, verifyNodes, proofNodes} from "state"
+import {inferenceRules} from "settings"
+import {SExpression} from "sexpression"
+import {drawState} from "proofCanvas"
+
 // Initial setup of the menus ==========================================================================================
 
 //When the document loads
@@ -45,7 +50,7 @@ function getInputElementById(id : string) : HTMLInputElement{
  * Trigged when someone double clicks a blank area of the canvas
  * @param position Takes in the position that was clicked to create the new node at
  */
-function openNewNodeMenu(position : Position) : void{
+export function openNewNodeMenu(position : Position) : void{
     document.getElementById("canvas-blocker").style.display = "inline";
     document.getElementById("new-node-menu").style.display = "inline";
     document.getElementById("create-node-button").style.display = "inline";
@@ -60,7 +65,7 @@ function openNewNodeMenu(position : Position) : void{
  * Trigged when someone double clicks a node that already exists
  * @param node Takes in the proof node that was clicked that will be edited
  */
-function openEditNodeMenu(node : ProofNode) : void{
+export function openEditNodeMenu(node : ProofNode) : void{
     document.getElementById("canvas-blocker").style.display = "inline";
     document.getElementById("new-node-menu").style.display = "inline";
     document.getElementById("create-node-button").style.display = "none";

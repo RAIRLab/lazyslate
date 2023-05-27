@@ -4,10 +4,14 @@
  * and methods for importing, exporting, and manipulating the global proof state
  */
 
+import { drawState } from "proofCanvas";
+import { SExpression } from "sexpression";
+import { verifyNode } from "verify";
+
 // Global state ========================================================================================================
 //the full list of nodes and the links between them.
-let proofNodes : Array<ProofNode> = [];
-let proofLinks : Array<[ProofNode,ProofNode]> = [];
+export let proofNodes : Array<ProofNode> = [];
+export let proofLinks : Array<[ProofNode,ProofNode]> = [];
 
 
 // Representations =====================================================================================================
@@ -15,7 +19,7 @@ let proofLinks : Array<[ProofNode,ProofNode]> = [];
 /**
  * A position on the 2d lazyslate canvas
  */
-class Position{
+export class Position{
     x : number; 
     y : number;
 }
@@ -23,7 +27,7 @@ class Position{
 /**
  * A 2d bounding box describing a rectangle on the lazyslate canvas
  */
-class BoundingBox{
+export class BoundingBox{
     x0 : number; 
     y0 : number;
     x1 : number;
@@ -49,7 +53,7 @@ class BoundingBox{
  *                      botAnchor (for outgoing lines)
  * ```
  */
-class ProofNode{
+export class ProofNode{
 
     //Proof graph representation
     id : number;
@@ -127,7 +131,7 @@ class ProofNode{
  * @param node The base node we want to verify
  * @param visited A list of node ID's that have already been verified.
  */
-function verifyNodes(node : ProofNode, visited : Array<number> = []) : void{
+export function verifyNodes(node : ProofNode, visited : Array<number> = []) : void{
     node.verified = verifyNode(node);
     visited.push(node.id);
     for(let child of node.children){
@@ -140,7 +144,7 @@ function verifyNodes(node : ProofNode, visited : Array<number> = []) : void{
 /**
  * Creates and verifies a new node, for parameters see @see ProofNode.constructor 
  */
-function createNode(name : string, justification : string, expression : SExpression, position : Position) : void{
+export function createNode(name : string, justification : string, expression : SExpression, position : Position) : void{
     let newNode = new ProofNode(name, justification, expression, position);
     proofNodes.push(newNode);
     verifyNodes(newNode);
@@ -151,7 +155,7 @@ function createNode(name : string, justification : string, expression : SExpress
  * @param fromNode the node from which the new link is being connected
  * @param toNode the node to which the new link is being connected
  */
-function createLink(fromNode : ProofNode, toNode : ProofNode) : void{
+export function createLink(fromNode : ProofNode, toNode : ProofNode) : void{
     proofLinks.push([fromNode, toNode]);
     fromNode.children.push(toNode);
     toNode.parents.push(fromNode);
@@ -163,7 +167,7 @@ function createLink(fromNode : ProofNode, toNode : ProofNode) : void{
  * Deletes a node and reverifies all nodes dependednt on the deleted node
  * @param node the node to be deleted
  */
-function deleteNode(node : ProofNode) : void{
+export function deleteNode(node : ProofNode) : void{
     let oldChildren : Array<ProofNode> = node.children;
     for(const parent of node.parents){
         parent.children = parent.children.filter(n=>node.id != n.id);
@@ -185,7 +189,7 @@ function deleteNode(node : ProofNode) : void{
  * @param fromNode the start node of the link to delete
  * @param toNode the end node of the link to delete
  */
-function deleteLink(fromNode : ProofNode, toNode : ProofNode) : void{
+export function deleteLink(fromNode : ProofNode, toNode : ProofNode) : void{
     fromNode.children = fromNode.children.filter(n=>toNode.id != n.id);
     toNode.parents = toNode.parents.filter(n=>fromNode.id != n.id);
     proofLinks = proofLinks.filter(n=> !(n[0].id == fromNode.id && n[1].id == toNode.id));
@@ -198,7 +202,7 @@ function deleteLink(fromNode : ProofNode, toNode : ProofNode) : void{
  * Converts the global state to a JSON string
  * @returns A JSON string of the proof state
  */
-function stateToJSON() : string{
+export function stateToJSON() : string{
     let proofNodesJSON = []
     for(const node of proofNodes){
         proofNodesJSON.push({
@@ -220,7 +224,7 @@ function stateToJSON() : string{
  * Takes a json string of the proof state, parses it, and uses it to set the global proof state
  * @param jsonString A json string representing the proof state, in the format returned by @see stateToJSON
  */
-function setStateFromJSON(jsonString : string) : void{
+export function setStateFromJSON(jsonString : string) : void{
     proofNodes = [];
     proofLinks = [];
     const jsonObject : any = JSON.parse(jsonString);
@@ -265,7 +269,7 @@ function setStateFromJSON(jsonString : string) : void{
  * @param name The name of the proof node to find
  * @returns The first proof node found with the given name, or null if not found
  */
-function lookupNode(name : string) : ProofNode {
+export function lookupNode(name : string) : ProofNode {
     for (const node of proofNodes) {
         if (name == node.name) {
             return node;

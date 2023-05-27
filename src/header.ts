@@ -3,7 +3,9 @@
  * @fileoverview Contains event handlers for items in the header menu
  */
 
-import * as LZString from "../libs/lz-string.min.js";
+import * as LZString from "./libs/lz-string.min";
+
+import { setStateFromJSON, stateToJSON } from "state"
 
 /**
  * Downloads A file to the users computer with the given filename and file contents.
@@ -24,7 +26,7 @@ function download(filename : string, contents : string) : void {
 /**
  * Downloads the current proof as a .json lazyslate proof file
  */
-function onDownloadButtonPress() : void{
+export function onDownloadButtonPress() : void{
     const fileContents : string = stateToJSON();
     const fileName : string = new Date().getTime()+".json";
     download(fileName, fileContents);
@@ -33,7 +35,7 @@ function onDownloadButtonPress() : void{
 /**
  * Creates a compressed link to a lazyslate proof using a URL param
  */
-function onGetLinkButtonPress() : void{
+export function onGetLinkButtonPress() : void{
     const fileContents = stateToJSON();
     const compressedFileContents = LZString.compressToEncodedURIComponent(fileContents);
     const URIEncodedCompressedFileContents = compressedFileContents.replaceAll("-", "%2D");
@@ -45,7 +47,7 @@ function onGetLinkButtonPress() : void{
 /**
  * Uses a provided lazyslate proof file to build a 
  */
-function onProofFileUpload() : void{
+export function onProofFileUpload() : void{
     let file : File = (<HTMLInputElement>document.getElementById('proof-file-input')).files[0];
     let reader : FileReader = new FileReader();
     reader.addEventListener("load", ()=>{setStateFromJSON(reader.result.toString())}, false);

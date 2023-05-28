@@ -3,7 +3,7 @@
  * @fileoverview Contains event handlers for items in the header menu
  */
 
-import * as LZString from "./libs/lz-string.min.js";
+import { compressToEncodedURIComponent } from "./libs/lz-string.min.js";
 
 import { setStateFromJSON, stateToJSON } from "./state.js"
 
@@ -37,7 +37,7 @@ export function onDownloadButtonPress() : void{
  */
 export function onGetLinkButtonPress() : void{
     const fileContents = stateToJSON();
-    const compressedFileContents = LZString.compressToEncodedURIComponent(fileContents);
+    const compressedFileContents = compressToEncodedURIComponent(fileContents);
     const URIEncodedCompressedFileContents = compressedFileContents.replaceAll("-", "%2D");
     const lazyslateHost = window.location.href.split("?")[0];
     const url = lazyslateHost + "?proof=" + URIEncodedCompressedFileContents;

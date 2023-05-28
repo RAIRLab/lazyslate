@@ -9,6 +9,7 @@ import { SExpression } from "./sexpression.js";
 import { verifyNode } from "./verify.js";
 
 // Global state ========================================================================================================
+
 //the full list of nodes and the links between them.
 export let proofNodes : Array<ProofNode> = [];
 export let proofLinks : Array<[ProofNode,ProofNode]> = [];

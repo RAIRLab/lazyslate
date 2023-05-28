@@ -56,6 +56,34 @@ function getInputElementById(id : string) : HTMLInputElement{
     }
 }
 
+/**
+ * Gets an HTML text area element by ID in a typescript safe way
+ * @param id the id string of the element
+ * @returns the HTMLTextAreaElement with the given id or null if does not exist
+ */
+function getTextAreaElementById(id : string) : HTMLTextAreaElement{
+    let elm : HTMLElement =  document.getElementById(id);
+    if(elm != null && elm instanceof HTMLTextAreaElement){
+        return <HTMLTextAreaElement>elm;
+    }else{
+        return null;
+    }
+}
+
+/**
+ * Gets an HTML select element by ID in a typescript safe way
+ * @param id the id string of the element
+ * @returns the HTMLSelectElement with the given id or null if does not exist
+ */
+function getSelectElementById(id : string) : HTMLSelectElement{
+    let elm : HTMLElement =  document.getElementById(id);
+    if(elm != null && elm instanceof HTMLSelectElement){
+        return <HTMLSelectElement>elm;
+    }else{
+        return null;
+    }
+}
+
 // Handelers ===========================================================================================================
 
 /**
@@ -87,8 +115,8 @@ export function openEditNodeMenu(node : ProofNode) : void{
     getInputElementById("name-input").value = node.name;
     getInputElementById("X-input").value = node.position.x.toString();
     getInputElementById("Y-input").value = node.position.y.toString();
-    getInputElementById("justification-input").value = node.justification;
-    getInputElementById("formula-input").value = node.expression.toExpressionString();
+    getSelectElementById("justification-input").value = node.justification;
+    getTextAreaElementById("formula-input").value = node.expression.toExpressionString();
     formulaInput();
 }
 
@@ -105,12 +133,12 @@ export function closeNewNodeMenu() : void{
  */
 export function onCreateNodeButtonPress() : void{
     let name : string = getInputElementById("name-input").value;
-    let justification : string = (<HTMLSelectElement>document.getElementById("justification-input")).value;
+    let justification : string = getSelectElementById("justification-input").value;
     let position : Position = {
         x: parseInt(getInputElementById("X-input").value),
         y: parseInt(getInputElementById("Y-input").value)
     };
-    let sExpression : SExpression = new SExpression((<HTMLTextAreaElement>document.getElementById("formula-input")).value);
+    let sExpression : SExpression = new SExpression(getTextAreaElementById("formula-input").value);
     createNode(name, justification, sExpression, position);
     closeNewNodeMenu();
     drawState();
@@ -124,8 +152,8 @@ export function onEditNodeButtonPress() : void{
     node.name = getInputElementById("name-input").value;
     node.position.x = parseInt(getInputElementById("X-input").value);
     node.position.y = parseInt(getInputElementById("Y-input").value);
-    node.justification = (<HTMLSelectElement>document.getElementById("justification-input")).value;
-    node.expression = new SExpression((<HTMLTextAreaElement>document.getElementById("formula-input")).value);
+    node.justification = getSelectElementById("justification-input").value;
+    node.expression = new SExpression(getTextAreaElementById("formula-input").value);
     node.assumptions = new Set();
     closeNewNodeMenu();
     verifyNodes(node);
@@ -136,7 +164,7 @@ export function onEditNodeButtonPress() : void{
  * Trigged when text is typed into the new-node-box or the edit node menu is opened
  */
 export function formulaInput(){
-    let inputFormula : string = (<HTMLTextAreaElement>document.getElementById("formula-input")).value;
+    let inputFormula : string = getTextAreaElementById("formula-input").value;
     let formulaOutput : HTMLElement = document.getElementById("formula-output");
     let createNodeButton : HTMLButtonElement = <HTMLButtonElement>document.getElementById("create-node-button");
     if(inputFormula == ""){

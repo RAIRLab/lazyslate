@@ -1,7 +1,7 @@
 /**
  * @fileoverview This file contains global state for the proof canvas and rendering code of the global proof state
  */
-import * as LZString from "./libs/lz-string.min.js";
+import { decompressFromEncodedURIComponent } from "./libs/lz-string.min.js";
 import { openEditNodeMenu, openNewNodeMenu } from "./newNodeMenu.js";
 import { SExpression } from "./sexpression.js";
 import { inferenceRuleSymbols } from "./settings.js";
@@ -35,7 +35,7 @@ window.addEventListener('load', function () {
     if (urlParams.has("proof")) {
         const uriEncodedCompressedProof = urlParams.get("proof");
         const compressedProof = uriEncodedCompressedProof.replaceAll("%2D", "-");
-        const jsonProofString = LZString.decompressFromEncodedURIComponent(compressedProof);
+        const jsonProofString = decompressFromEncodedURIComponent(compressedProof);
         setStateFromJSON(jsonProofString);
     }
 });

@@ -47,6 +47,34 @@ function getInputElementById(id) {
         return null;
     }
 }
+/**
+ * Gets an HTML text area element by ID in a typescript safe way
+ * @param id the id string of the element
+ * @returns the HTMLTextAreaElement with the given id or null if does not exist
+ */
+function getTextAreaElementById(id) {
+    let elm = document.getElementById(id);
+    if (elm != null && elm instanceof HTMLTextAreaElement) {
+        return elm;
+    }
+    else {
+        return null;
+    }
+}
+/**
+ * Gets an HTML select element by ID in a typescript safe way
+ * @param id the id string of the element
+ * @returns the HTMLSelectElement with the given id or null if does not exist
+ */
+function getSelectElementById(id) {
+    let elm = document.getElementById(id);
+    if (elm != null && elm instanceof HTMLSelectElement) {
+        return elm;
+    }
+    else {
+        return null;
+    }
+}
 // Handelers ===========================================================================================================
 /**
  * Trigged when someone double clicks a blank area of the canvas
@@ -76,8 +104,8 @@ export function openEditNodeMenu(node) {
     getInputElementById("name-input").value = node.name;
     getInputElementById("X-input").value = node.position.x.toString();
     getInputElementById("Y-input").value = node.position.y.toString();
-    getInputElementById("justification-input").value = node.justification;
-    getInputElementById("formula-input").value = node.expression.toExpressionString();
+    getSelectElementById("justification-input").value = node.justification;
+    getTextAreaElementById("formula-input").value = node.expression.toExpressionString();
     formulaInput();
 }
 /**
@@ -92,12 +120,12 @@ export function closeNewNodeMenu() {
  */
 export function onCreateNodeButtonPress() {
     let name = getInputElementById("name-input").value;
-    let justification = document.getElementById("justification-input").value;
+    let justification = getSelectElementById("justification-input").value;
     let position = {
         x: parseInt(getInputElementById("X-input").value),
         y: parseInt(getInputElementById("Y-input").value)
     };
-    let sExpression = new SExpression(document.getElementById("formula-input").value);
+    let sExpression = new SExpression(getTextAreaElementById("formula-input").value);
     createNode(name, justification, sExpression, position);
     closeNewNodeMenu();
     drawState();
@@ -110,8 +138,8 @@ export function onEditNodeButtonPress() {
     node.name = getInputElementById("name-input").value;
     node.position.x = parseInt(getInputElementById("X-input").value);
     node.position.y = parseInt(getInputElementById("Y-input").value);
-    node.justification = document.getElementById("justification-input").value;
-    node.expression = new SExpression(document.getElementById("formula-input").value);
+    node.justification = getSelectElementById("justification-input").value;
+    node.expression = new SExpression(getTextAreaElementById("formula-input").value);
     node.assumptions = new Set();
     closeNewNodeMenu();
     verifyNodes(node);
@@ -121,7 +149,7 @@ export function onEditNodeButtonPress() {
  * Trigged when text is typed into the new-node-box or the edit node menu is opened
  */
 export function formulaInput() {
-    let inputFormula = document.getElementById("formula-input").value;
+    let inputFormula = getTextAreaElementById("formula-input").value;
     let formulaOutput = document.getElementById("formula-output");
     let createNodeButton = document.getElementById("create-node-button");
     if (inputFormula == "") {

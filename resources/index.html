@@ -8,16 +8,17 @@
         <script src="libs/lz-string.min.js"></script>  <!-- Compression Library -->
 
         <!--Includes-->
-        <script src="settings.js"></script>     <!-- List of operators and inference rules -->
-        <script src="sexpression.js"></script>  <!-- S-Expression Helper -->
-        <script src="verify.js"></script>       <!-- Verification code -->
-        <script src="state.js"></script>        <!-- Global Application State  -->
-        <script src="header.js"></script>       <!-- Header Menu Controls -->
-        <script src="newNodeMenu.js"></script>  <!-- Node Creation/Editing Menu Controls -->
-        <script src="proofCanvas.js"></script>  <!-- Main Canvas drawing and event controls -->
+        <script src="settings.js" type="module"></script>     <!-- List of operators and inference rules -->
+        <script src="sexpression.js" type="module"></script>  <!-- S-Expression Helper -->
+        <script src="verify.js" type="module"></script>       <!-- Verification code -->
+        <script src="state.js" type="module"></script>        <!-- Global Application State  -->
+        <script src="header.js" type="module"></script>       <!-- Header Menu Controls -->
+        <script src="newNodeMenu.js" type="module"></script>  <!-- Node Creation/Editing Menu Controls -->
+        <script src="proofCanvas.js" type="module"></script>  <!-- Main Canvas drawing and event controls -->
         <link href="style.css" rel="stylesheet">
     </head>
     <body>
+        
         <!--The header menu-->
         <header id="header">
             <label for="proof-file-input">Upload Proof File</label>
@@ -25,6 +26,7 @@
             <button onclick="onDownloadButtonPress()">Download Proof</button>
             <button onclick="onGetLinkButtonPress()">Copy Link To Proof</button>
         </header>
+
         <!--The Main Menu for adding nodes-->
         <div id="new-node-menu">
             <input id="id-input" type="number" readonly disabled> <!--Only visible from edit menu-->
@@ -45,5 +47,8 @@
         <div id="canvas-blocker"></div> <!--visible when node menu is open to prevent clicks on the canvas-->
         <!--The main HTML Canvas-->
         <canvas id="proof-canvas" oncontextmenu="return false;"></canvas>
+
+        
+
     </body>
 </html>

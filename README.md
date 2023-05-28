@@ -6,6 +6,18 @@
 Lazyslate is an open source graphical proof construction assistant for the creation of Natural Deduction proofs. 
 It is influenced by the commercial Hyperslate Proof Assistant which has many more features and additional logics. 
 
+## Building
+
+#### Dependancies
+
+#### Building
+
+Run the build script with 
+
+```
+    ./build.sh
+```
+
 ## Features
 
 ### Logics

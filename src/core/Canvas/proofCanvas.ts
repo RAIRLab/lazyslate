@@ -2,18 +2,11 @@
  * @fileoverview This file contains global state for the proof canvas and rendering code of the global proof state
  */
 
-import { decompressFromEncodedURIComponent } from "./libs/lz-string";
-
-import {openEditNodeMenu, openNewNodeMenu} from "./newNodeMenu";
-import {SExpression} from "./sexpression";
-import {inferenceRuleSymbols} from "./settings";
-
-import {
-    ProofNode, setStateFromJSON, Position, proofNodes,
-    BoundingBox, createLink, deleteLink, deleteNode,
-    createNode, proofLinks
-} from "./state";
-
+import {inferenceRuleSymbols} from "../settings";
+import {openEditNodeMenu, openNewNodeMenu} from "../Widgets/newNodeMenu";
+import {SExpression} from "../Proof/sexpression";
+import {ProofNode, BoundingBox, Position} from "../Proof/proofNode";
+import {proofNodes, proofLinks, createLink, deleteLink, deleteNode, createNode} from "../Proof/state";
 
 // Global Canvas State =================================================================================================
 
@@ -44,16 +37,6 @@ window.addEventListener('load', function() {
     canvas.addEventListener('mouseup', onMouseUp);
     window.addEventListener('keydown', onKeyDown);      //Canvas does not have a keydown
     window.addEventListener('resize', onResize);
-
-    //Load the proof encoded in the URL if it exists
-    const queryString : string = window.location.search;
-    const urlParams : URLSearchParams = new URLSearchParams(queryString);
-    if(urlParams.has("proof")){
-        const uriEncodedCompressedProof : string = urlParams.get("proof");
-        const compressedProof : string = uriEncodedCompressedProof.replaceAll("%2D", "-");
-        const jsonProofString : string = decompressFromEncodedURIComponent(compressedProof);
-        setStateFromJSON(jsonProofString);
-    }
 });
 
 //Some browsers do not supprt the roundRect method for canvas drawing. 

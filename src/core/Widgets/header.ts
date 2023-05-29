@@ -3,9 +3,9 @@
  * @fileoverview Contains event handlers for items in the header menu
  */
 
-import { compressToEncodedURIComponent } from "./libs/lz-string";
-
-import { setStateFromJSON, stateToJSON } from "./state"
+import { compressToEncodedURIComponent } from "../../libs/lz-string";
+import { setStateFromJSON, stateToJSON } from "../Proof/jsonIO";
+import { drawState } from "../Canvas/proofCanvas";
 
 /**
  * Downloads A file to the users computer with the given filename and file contents.
@@ -50,7 +50,7 @@ export function onGetLinkButtonPress() : void{
 export function onProofFileUpload() : void{
     let file : File = (<HTMLInputElement>document.getElementById('proof-file-input')).files[0];
     let reader : FileReader = new FileReader();
-    reader.addEventListener("load", ()=>{setStateFromJSON(reader.result.toString())}, false);
+    reader.addEventListener("load", ()=>{setStateFromJSON(reader.result.toString()); drawState();}, false);
     reader.readAsText(file);
 }
 

@@ -2,8 +2,12 @@
  * @fileoverview Functions that verify Proof Nodes of diffrent types
  */
 
-import { ProofNode, lookupNode } from "./state";
+import { ProofNode, lookupNode, proofNodes } from "./state";
 import { SExpression } from "./sexpression";
+
+export function verifyState():void{
+
+}
 
 export function verifyNode(node : ProofNode) : boolean{
     switch(node.justification) {

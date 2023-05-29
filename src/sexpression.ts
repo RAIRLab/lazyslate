@@ -3,7 +3,7 @@
  * @fileoverview This file specifies an SExpression class for creating and manipulating SExpression formulae.
  */
 
-import {logicalOperatorNames, logicalOperatorSymbols} from "./settings.js"
+import {logicalOperatorNames, logicalOperatorSymbols} from "./settings"
 
 //This file assumes settings.js has already been imported
  

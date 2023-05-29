@@ -1,0 +1,33 @@
+{
+  "name": "lazyslate",
+  "version": "1.0.0",
+  "description": "## Info",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "buid": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/James-Oswald/lazyslate.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "UNLICENCED",
+  "bugs": {
+    "url": "https://github.com/James-Oswald/lazyslate/issues"
+  },
+  "homepage": "https://github.com/James-Oswald/lazyslate",
+  "devDependencies": {
+    "css-loader": "^6.8.1",
+    "html-webpack-plugin": "^5.5.1",
+    "style-loader": "^3.3.3",
+    "ts-loader": "^9.4.3",
+    "typescript": "^5.0.4",
+    "webpack": "^5.84.1",
+    "webpack-cli": "^5.1.1"
+  },
+  "dependencies": {
+    "lz-string": "^1.5.0"
+  }
+}

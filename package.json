@@ -2,18 +2,16 @@
   "name": "lazyslate",
   "version": "1.0.0",
   "description": "## Info",
-  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "buid": "webpack"
+    "build": "webpack --mode production"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/James-Oswald/lazyslate.git"
   },
-  "keywords": [],
+  "keywords": ["interactive-theorem-prover"],
   "author": "",
-  "license": "UNLICENCED",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/James-Oswald/lazyslate/issues"
   },
@@ -26,8 +24,5 @@
     "typescript": "^5.0.4",
     "webpack": "^5.84.1",
     "webpack-cli": "^5.1.1"
-  },
-  "dependencies": {
-    "lz-string": "^1.5.0"
   }
 }

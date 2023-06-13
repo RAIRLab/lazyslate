@@ -2,7 +2,8 @@
  * @fileoverview Functions that verify Proof Nodes of diffrent types
  */
 
-import { ProofNode, lookupNode, proofNodes } from "./state";
+import { ProofNode } from "./proofNode";
+import { lookupNode, proofNodes } from "./state";
 import { SExpression } from "./sexpression";
 
 export function verifyState():void{

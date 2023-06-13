@@ -10,6 +10,7 @@ module.exports = {
       {test: /\.css$/, use: ["style-loader", "css-loader"], exclude: /node_modules/}
     ],
   },
+  "watch" : true,
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],
   },

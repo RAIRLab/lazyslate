@@ -208,6 +208,81 @@ function onResize(event : UIEvent) : void{
  * @param node the node to draw
  */
 function drawNode(node : ProofNode) : void{
+    drawNodeHyper(node);
+}
+
+function drawNodeHyper(node : ProofNode) : void{
+    const padding = 10;
+    const minipadding = 2;
+    const textLines = 2;
+    ctx.font = "20px Arial";
+    const fontMetrics = ctx.measureText(node.name);
+    let fontHeight = fontMetrics.fontBoundingBoxAscent;
+    if (fontHeight == undefined) {
+        fontHeight = fontMetrics.actualBoundingBoxAscent + fontMetrics.actualBoundingBoxDescent + 4;
+    }
+    const baseX = node.position.x - worldXOffset;
+    const baseY = node.position.y - worldYOffset;
+    
+    //Compute the width of our node based on text on the node
+    const assumptionsString = "from {" + Array.from(node.assumptions).toString() + "}";
+    const width = 2*padding + Math.max(
+        ctx.measureText(node.expression.toString()).width + ctx.measureText(node.name).width + padding,
+        ctx.measureText(assumptionsString).width
+    );
+    
+    //Draw the node body and compute our bounding box for future clicks
+    ctx.strokeStyle = selectedNode != null && selectedNode.id == node.id ? "Indigo" : "Black";
+    ctx.fillStyle = selectedNode != null && selectedNode.id == node.id ? "Lavender" : "white";
+    ctx.beginPath();
+    //ctx.rect(baseX, baseY, width, 3*fontHeight + 2*padding);
+    ctx.roundRect(baseX, baseY, width, 2*fontHeight + 2*padding, padding);
+    node.boundingBox = {
+        x0: baseX + worldXOffset,
+        y0: baseY + worldYOffset,
+        x1: baseX + width + worldXOffset,
+        y1: baseY + textLines*fontHeight + 2*padding + worldYOffset + 2*minipadding,
+    };
+    ctx.fill();
+    ctx.stroke();
+
+    //Draw the bar
+    ctx.beginPath();
+    ctx.moveTo(baseX + width/2, baseY - fontHeight);
+    ctx.lineTo(baseX + width/2, baseY);
+    ctx.stroke();
+    
+    //Draw the hat
+    ctx.beginPath();
+    const hatText = inferenceRuleSymbols.get(node.justification);
+    const hatWidth = ctx.measureText(hatText).width + 2*padding;
+    ctx.strokeStyle = node.verified ? "lime" : "red";
+    //ctx.rect(baseX + (width - hatWidth)/2, baseY - (2*fontHeight + 2*padding), hatWidth, fontHeight + 2*padding, padding);
+    ctx.lineWidth = 2;
+    ctx.rect(baseX + (width - hatWidth)/2, baseY - (2*fontHeight + 2*padding), hatWidth, fontHeight + 2*padding);
+    ctx.fill();
+    ctx.stroke();
+
+    node.topAnchor = {x: baseX + width/2 + worldXOffset, y: baseY - (2*fontHeight + 2*padding) + worldYOffset}
+    node.botAnchor = {x: baseX + width/2 + worldXOffset, y: baseY + textLines*fontHeight + 2*padding + worldYOffset + 2*minipadding}
+
+    //Draw the name box
+    ctx.beginPath()
+    ctx.fillStyle="Purple"
+    ctx.rect(baseX+padding-minipadding, baseY + padding, ctx.measureText(node.name).width + 2*minipadding, fontHeight+2*minipadding);
+    ctx.fill();
+    
+    //Draw the text on the node
+    ctx.fillStyle = "white"
+    ctx.fillText(node.name, baseX + padding, baseY + fontHeight + padding);
+    ctx.fillStyle = selectedNode != null && selectedNode.id == node.id ? "Indigo" : "Black";
+    ctx.fillText(node.expression.toString(), baseX + padding + ctx.measureText(node.name).width + padding, baseY + fontHeight + padding);
+    ctx.fillText(assumptionsString, baseX + padding, baseY + textLines*fontHeight + padding + 2*minipadding);
+    ctx.fillText(hatText, baseX + (width - hatWidth)/2 + padding, baseY - (fontHeight + padding));
+
+}
+
+function drawNodeClassic(node : ProofNode) : void{
     const padding = 10;
     ctx.font = "20px Arial";
     const fontMetrics = ctx.measureText(node.name);
@@ -268,17 +343,68 @@ function drawNode(node : ProofNode) : void{
     ctx.fillText(hatText, baseX + (width - hatWidth)/2 + padding, baseY - (fontHeight + padding));
 }
 
-/**
- * Takes a link and draws a line connecting the two linked nodes with respect to global state
- * @param fromNode the node the link to draw starts at
- * @param toNode the node the link to draw ends at
- */
-function drawLink(fromNode : ProofNode, toNode : ProofNode){
+function drawLinkClassic(fromNode : ProofNode, toNode : ProofNode){
     ctx.strokeStyle = "black";
     ctx.beginPath();
     ctx.moveTo(fromNode.botAnchor.x - worldXOffset, fromNode.botAnchor.y - worldYOffset);
     ctx.lineTo(toNode.topAnchor.x - worldXOffset, toNode.topAnchor.y - worldYOffset);
     ctx.stroke();
+}
+
+/**
+ * Stolen from https://stackoverflow.com/a/38238458/6342516
+ */
+function drawPolygon(centerX : number, centerY : number, sideCount : number, size : number,
+                     strokeWidth : number, strokeColor : string, fillColor : string, 
+                     radians : number){
+    ctx.translate(centerX,centerY);
+    ctx.rotate(radians);
+    ctx.beginPath();
+    ctx.moveTo (size * Math.cos(0), size * Math.sin(0));          
+    for (var i = 1; i <= sideCount;i += 1) {
+        ctx.lineTo (size * Math.cos(i * 2 * Math.PI / sideCount), size * Math.sin(i * 2 * Math.PI / sideCount));
+    }
+    ctx.closePath();
+    ctx.fillStyle=fillColor;
+    ctx.strokeStyle = strokeColor;
+    ctx.lineWidth = strokeWidth;
+    ctx.stroke();
+    ctx.fill();
+    ctx.rotate(-radians);
+    ctx.translate(-centerX,-centerY);    
+}
+
+function drawLinkHyper(fromNode : ProofNode, toNode : ProofNode) : void{
+    ctx.strokeStyle = "gray";
+    ctx.fillStyle = "gray";
+    let startx : number = fromNode.botAnchor.x - worldXOffset;
+    let starty : number = fromNode.botAnchor.y - worldYOffset;
+    let endx : number = toNode.topAnchor.x - worldXOffset
+    let endy : number = toNode.topAnchor.y - worldYOffset
+    ctx.beginPath();
+    ctx.moveTo(startx, starty);
+    ctx.lineTo(endx, endy);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(startx, starty, 3, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(endx, endy, 3, 0, 2 * Math.PI);
+    ctx.fill();
+    let midx : number = Math.floor((endx + startx) / 2);
+    let midy : number = Math.floor((endy + starty) / 2);
+    let slope : number = (endy - starty)/(endx - startx);
+    let angle : number = Math.atan(slope) + (startx > endx ? Math.PI : 0);
+    drawPolygon(midx, midy, 3, 10, 0, "gray", "gray", angle); 
+}
+
+/**
+ * Takes a link and draws a line connecting the two linked nodes with respect to global state
+ * @param fromNode the node the link to draw starts at
+ * @param toNode the node the link to draw ends at
+ */
+function drawLink(fromNode : ProofNode, toNode : ProofNode) : void{
+    drawLinkHyper(fromNode, toNode);
 }
 
 /**

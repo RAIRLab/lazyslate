@@ -2,7 +2,8 @@
  * @fileoverview Contains code for setup and handlers of events relating to the new node menu and edit node menu
  */
 
-import {Position, ProofNode, createNode, verifyNodes, proofNodes} from "../Proof/state"
+import {Position, ProofNode} from "../Proof/proofNode"
+import {createNode, verifyNodes, proofNodes} from "../Proof/state"
 import {inferenceRules} from "../settings"
 import {SExpression} from "../Proof/sexpression"
 import {drawState} from "../Canvas/proofCanvas"

@@ -208,7 +208,7 @@ function onResize(event : UIEvent) : void{
  * @param node the node to draw
  */
 function drawNode(node : ProofNode) : void{
-    drawNodeHyper(node);
+    drawNodeClassic(node);
 }
 
 function drawNodeHyper(node : ProofNode) : void{
@@ -404,7 +404,7 @@ function drawLinkHyper(fromNode : ProofNode, toNode : ProofNode) : void{
  * @param toNode the node the link to draw ends at
  */
 function drawLink(fromNode : ProofNode, toNode : ProofNode) : void{
-    drawLinkHyper(fromNode, toNode);
+    drawLinkClassic(fromNode, toNode);
 }
 
 /**

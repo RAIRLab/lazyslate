@@ -94,17 +94,24 @@ export class SExpression{
         if(this.value == "ERROR"){
             return "ERROR"
         }
+        //Term litteral or predicate
         if(this.children.length == 0){
             return this.value;
+        //Not
         }else if(this.children.length == 1 && logicalOperatorNames.includes(this.value) && this.value == "not"){ //Eventually we should specify unary operators in settings
             return logicalOperatorSymbols.get(this.value) + this.children[0].toString(_depth + 1); 
+        //Quantifiers
+        }else if(this.children.length == 2 && (this.value == "forall" || this.value == "exists")){
+            return logicalOperatorSymbols.get(this.value) + this.children[0].value + ":" + this.children[1].toString(_depth + 1);
+        //Binary connectives
         }else if(this.children.length == 2 && logicalOperatorNames.includes(this.value)){
             let string = this.children[0].toString(_depth + 1) + " " + logicalOperatorSymbols.get(this.value) + " " + this.children[1].toString(_depth + 1); 
             if(_depth != 0)
                 return "(" + string + ")";
             else
                 return string;
-        }else{ //We're a function or predicate
+        //Function or predicate
+        }else{ 
             let string = this.value + "(";
             for(let child of this.children){
                 string += child.toString(_depth + 1) + ",";
@@ -223,6 +230,14 @@ export class SExpression{
      * @returns the set of object constant SExpressions in this SExpression
      */
     constants() : Array<SExpression>{
-        
+        //The set of leafs minus the bound variables are treated as constants
+        const variables : Array<SExpression> = this.vars();
+        let consts : Array<SExpression> = [];
+        for(let leaf of this.recursiveLeafTerms(false)){
+            if (!variables.includes(leaf)){
+                consts.push(leaf);
+            } 
+        }
+        return consts;
     }
 }

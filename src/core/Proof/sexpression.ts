@@ -152,5 +152,77 @@ export class SExpression{
         }
 
         return true;
+    } 
+
+    /**
+     * Recursively decends the parse tree and returns a list of bound vars and the quantifiers they bind to
+     * @param quantifierStack A stack of nested quantifiers, in the event of name clashes, will bind to the 
+     *                        more deeply nested one.
+     * @param term A boolean indicating weather the current SExpression is on the term level, false if formula level
+     * @returns A list of pairs conatining [quantifier SExpression Object, bound Var SExpression Object]
+     */
+    private varsRecursive(quantifierStack : Array<SExpression>, termLevel : boolean) : Array<[SExpression, SExpression]>{
+        //Base case: We are a 0 arity constant on the term level
+        if(this.children.length == 0 && termLevel){
+            //Search the quantifier stack backwards and bind to the nearest one 
+            for(let i = quantifierStack.length-1; i >= 0; i--){
+                let quantifier : SExpression = quantifierStack[i];
+                let quantifedVar : string = quantifier.children[0].value;
+                if(this.value == quantifedVar){
+                    return new Array([quantifier, this]);
+                }
+            }
+            return new Array();
+        }
+        //Recursive case 1: We are a quantifier
+        if(this.children.length == 2 && (this.value == "forall" || this.value == "exists")){
+            quantifierStack.push(this);
+            let rv = this.children[1].varsRecursive(quantifierStack, false);
+            quantifierStack.pop();
+            return rv;
+        }
+        //Recursive case 2: We are 
+        let boundVars : Array<[SExpression, SExpression]> = new Array();
+        for(let child of this.children){
+            //The child is only a term iff we are not a logical operator.
+            let isTermLevel : boolean = logicalOperatorNames.includes(this.value);
+            let newBoundVars = child.varsRecursive(quantifierStack, isTermLevel);
+            //Union in the new bound vars
+            boundVars.concat(newBoundVars)
+        }
+        return boundVars;
+    }
+
+    /**
+     * @returns A list of all sub-expression objects that are bound variables
+     */
+    vars() : Array<SExpression>{
+        let boundVarsAndQuants : Array<[SExpression, SExpression]> = this.varsRecursive([], false);
+        let boundVars : Array<SExpression> = boundVarsAndQuants.map(v=>v[1]);
+        return boundVars;
+    }
+
+
+    private recursiveLeafTerms(termLevel : boolean) : Array<SExpression>{
+        //Base case, term level 0 arity
+        if(this.children.length == 0 && termLevel){
+            return new Array(this);
+        }
+        //Recursive case, children
+        let leafTerms : Array<SExpression> = new Array();
+        for(let child of this.children){
+            //The child is only a term iff we are not a logical operator.
+            //Note that this also prevents quantifier's first children from being consitered leafs 
+            let isTermLevel : boolean = logicalOperatorNames.includes(this.value);
+            leafTerms.concat(child.recursiveLeafTerms(isTermLevel));
+        }
+        return leafTerms;
+    }
+
+    /**
+     * @returns the set of object constant SExpressions in this SExpression
+     */
+    constants() : Array<SExpression>{
+        
     }
 }

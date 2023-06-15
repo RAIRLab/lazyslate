@@ -192,10 +192,10 @@ export class SExpression{
         let boundVars : Array<[SExpression, SExpression]> = new Array();
         for(let child of this.children){
             //The child is only a term iff we are not a logical operator.
-            let isTermLevel : boolean = logicalOperatorNames.includes(this.value);
+            let isTermLevel : boolean = !logicalOperatorNames.includes(this.value);
             let newBoundVars = child.varsRecursive(quantifierStack, isTermLevel);
             //Union in the new bound vars
-            boundVars.concat(newBoundVars)
+            boundVars = boundVars.concat(newBoundVars)
         }
         return boundVars;
     }
@@ -220,8 +220,8 @@ export class SExpression{
         for(let child of this.children){
             //The child is only a term iff we are not a logical operator.
             //Note that this also prevents quantifier's first children from being consitered leafs 
-            let isTermLevel : boolean = logicalOperatorNames.includes(this.value);
-            leafTerms.concat(child.recursiveLeafTerms(isTermLevel));
+            let isTermLevel : boolean = !logicalOperatorNames.includes(this.value);
+            leafTerms = leafTerms.concat(child.recursiveLeafTerms(isTermLevel));
         }
         return leafTerms;
     }

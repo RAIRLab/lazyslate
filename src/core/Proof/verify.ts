@@ -593,3 +593,40 @@ function verifyNotElim(node : ProofNode) : boolean {
     }
     return true;
 }
+
+function is_exists_expression(expression : SExpression) : boolean{
+    if(expression.value != "exists" || expression.children.length != 2)
+        return false;
+    if(expression.children[0].children.length != 0) //First child must be a constant
+        return false;
+    return true;
+}
+
+function verifyExistsIntro(node : ProofNode) : boolean{
+    if(!is_exists_expression(node.expression))
+        return false;
+
+    if(node.parents.length != 1)
+        return false;
+
+    //Ensure the introduced variable symbol does not appear "free" (we have no free vars) as the name of a constant
+    //in the parent formula.
+    const quantifedVarSymbol : string = node.expression.children[0].value;
+    const parentConstantSymbols : Array<string> = node.parents[0].expression.vars().map(x=>x.value);
+    if(parentConstantSymbols.includes(quantifedVarSymbol))
+        return false;
+
+    
+
+    //Ensure the syntax of the child tree matches under subsitution
+    let replacedExpression = structuredClone(node.expression.children[1])
+    for()
+}
+
+function is_forall_expression(expression : SExpression) : boolean{
+    if(expression.value != "forall" || expression.children.length != 2)
+        return false;
+    if(expression.children[0].children.length != 0) //First child must be a constant
+        return false;
+    return true;
+}

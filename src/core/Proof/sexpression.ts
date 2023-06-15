@@ -226,6 +226,26 @@ export class SExpression{
         return leafTerms;
     }
 
+    occurances(position : Array<number> = [], termLevel : boolean = false) : Array<[Array<number>, SExpression]>{
+        //Base case, term level 0 arity
+        if(this.children.length == 0 && termLevel){
+            return new Array([position, this]);
+        }
+        //Recursive case, children
+        let leafTerms : Array<SExpression> = new Array();
+        for(child of this.children){
+            //The child is only a term iff we are not a logical operator.
+            //Note that this also prevents quantifier's first children from being consitered leafs 
+            let isTermLevel : boolean = !logicalOperatorNames.includes(this.value);
+            leafTerms = leafTerms.concat(child.recursiveLeafTerms(isTermLevel));
+        }
+        return leafTerms;
+    }
+
+    subExprToPositionMap() : Map<SExpression, Array<Number>>{
+
+    }
+
     /**
      * @returns the set of object constant SExpressions in this SExpression
      */
@@ -240,4 +260,6 @@ export class SExpression{
         }
         return consts;
     }
+
+
 }

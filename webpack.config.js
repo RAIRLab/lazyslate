@@ -1,6 +1,8 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
+const isProduction = process.argv[process.argv.indexOf('--mode') + 1] === 'production';
+
 module.exports = {
   cache: false,
   entry: './src/app.ts',
@@ -10,7 +12,8 @@ module.exports = {
       {test: /\.css$/, use: ["style-loader", "css-loader"], exclude: /node_modules/}
     ],
   },
-  "watch" : true,
+  watch: !isProduction,
+  sourcemaps: !isProduction, 
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],
   },

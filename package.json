@@ -3,13 +3,16 @@
   "version": "1.0.0",
   "description": "## Info",
   "scripts": {
-    "build": "webpack --mode production"
+    "build": "webpack --mode production",
+    "build-dev": "webpack --mode development"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/James-Oswald/lazyslate.git"
   },
-  "keywords": ["interactive-theorem-prover"],
+  "keywords": [
+    "interactive-theorem-prover"
+  ],
   "author": "",
   "license": "MIT",
   "bugs": {
@@ -24,5 +27,8 @@
     "typescript": "^5.0.4",
     "webpack": "^5.84.1",
     "webpack-cli": "^5.1.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }

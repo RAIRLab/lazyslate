@@ -10,12 +10,13 @@ It is influenced by the commercial Hyperslate Proof Assistant which has many mor
 
 #### Dependancies
 
+Depends on node and npm as development dependencies.
+
 #### Building
 
-Run the build script with 
-
 ```
-    ./build.sh
+npm install     #install all the requisite packages
+npm run build   #build the project with webpack
 ```
 
 ## Features

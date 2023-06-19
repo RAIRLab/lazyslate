@@ -1,5 +1,5 @@
 /**
- * @fileoverview Functions that verify Proof Nodes of diffrent types
+ * @fileoverview Functions that verify Proof Nodes of different types
  */
 
 import { ProofNode } from "./proofNode";
@@ -34,6 +34,8 @@ export function verifyNode(node : ProofNode) : boolean{
             return verifyIffIntro(node);
         case "iffE":
             return verifyIffElim(node);
+        case "existsI":
+            return verifyExistsIntro(node);
         default:
             return false;
     }
@@ -611,16 +613,44 @@ function verifyExistsIntro(node : ProofNode) : boolean{
 
     //Ensure the introduced variable symbol does not appear "free" (we have no free vars) as the name of a constant
     //in the parent formula.
-    const quantifedVarSymbol : string = node.expression.children[0].value;
-    const parentConstantSymbols : Array<string> = node.parents[0].expression.vars().map(x=>x.value);
-    if(parentConstantSymbols.includes(quantifedVarSymbol))
+    const parent_node = node.parents[0];
+    const quantifiedVarSymbol : string = node.expression.children[0].value;
+    const parentConstantSymbols : Array<string> = parent_node.expression.vars().map(x=>x.value);
+    if(parentConstantSymbols.includes(quantifiedVarSymbol)){
+        console.error("The variable \"" + quantifiedVarSymbol + "\" appears free in the parent formula " + 
+        parent_node.expression.toString());
         return false;
+    }
+        
 
-    
+    //Ensure the syntax of the child tree matches under substitution
+    const varList : Array<SExpression> = node.expression.vars();
+    if(varList.length != 0){ //We only care about checking if vars have been replaced if they exist
+        const var0position : Array<number> = node.expression.children[1].subFormulaPosition(varList[0]);
+        //Find the position of where a var was placed in the subformula
+        const replacedVarExpr : SExpression = parent_node.expression.subformulaAtPosition(var0position);
+        const replacedVarSymbol : string = replacedVarExpr.value;
 
-    //Ensure the syntax of the child tree matches under subsitution
-    let replacedExpression = structuredClone(node.expression.children[1])
-    for()
+        console.log(replacedVarSymbol);
+        //Copy the child formula of the quantifier and,
+        //replace all instances of the replaced variable with the replacedVarSymbol
+        //It should match the parent formula
+        let quantifiedExpr : SExpression = node.expression.copy();
+        for(let v of quantifiedExpr.vars()){
+            if(v.value == quantifiedVarSymbol){
+                v.value = replacedVarSymbol;
+            }
+        }
+        if(!quantifiedExpr.children[1].equals(parent_node.expression)){
+            console.error("Failed to verify:" + node.expression.toString() + "due to arg formula mismatch between " +
+            quantifiedExpr.toString() + " and " + parent_node.expression);
+            return false;
+        }
+    }
+
+    //Assumption updating
+    node.assumptions = new Set(parent_node.assumptions)
+    return true;
 }
 
 function is_forall_expression(expression : SExpression) : boolean{

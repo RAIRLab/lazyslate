@@ -4,6 +4,7 @@
  */
 
 import {logicalOperatorNames, logicalOperatorSymbols} from "../settings"
+import { Position } from "./proofNode";
 
 //This file assumes settings.js has already been imported
  
@@ -14,8 +15,8 @@ export class SExpression{
     children: Array<SExpression>; //This is the list of SExpressions that are children of the node
 
     /**
-     * Constructs an SExpression tree from an SExpression string. On failiure to parse
-     * will still return an SExpression tree with the value ERROR where any synatx errors were found.
+     * Constructs an SExpression tree from an SExpression string. On failure to parse
+     * will still return an SExpression tree with the value ERROR where any syntax errors were found.
      * @param sExpressionString the string to parse
      */
     constructor(sExpressionString : string){
@@ -62,6 +63,15 @@ export class SExpression{
         }
     }
 
+    /**
+     * Make a copy of an SExpression
+     * @returns A deep copy of the SExpression
+     * @todo Bad implementation, would probably be much faster to recursively copy
+     */
+    copy() : SExpression{
+        return new SExpression(this.toExpressionString());
+    }
+
     /** Gets the value of the SExpression */
     getValue() : string{
         return this.value;
@@ -94,7 +104,7 @@ export class SExpression{
         if(this.value == "ERROR"){
             return "ERROR"
         }
-        //Term litteral or predicate
+        //Term literal or predicate
         if(this.children.length == 0){
             return this.value;
         //Not
@@ -137,7 +147,7 @@ export class SExpression{
     }
 
     /**
-     * Recursively checks if two SExpressions are equivelent 
+     * Recursively checks if two SExpressions are equivalent 
      * @param other The SExpression to compare against
      * @returns If the two SExpressions match
      */
@@ -162,11 +172,11 @@ export class SExpression{
     } 
 
     /**
-     * Recursively decends the parse tree and returns a list of bound vars and the quantifiers they bind to
+     * Recursively descends the parse tree and returns a list of bound vars and the quantifiers they bind to
      * @param quantifierStack A stack of nested quantifiers, in the event of name clashes, will bind to the 
      *                        more deeply nested one.
      * @param term A boolean indicating weather the current SExpression is on the term level, false if formula level
-     * @returns A list of pairs conatining [quantifier SExpression Object, bound Var SExpression Object]
+     * @returns A list of pairs containing [quantifier SExpression Object, bound Var SExpression Object]
      */
     private varsRecursive(quantifierStack : Array<SExpression>, termLevel : boolean) : Array<[SExpression, SExpression]>{
         //Base case: We are a 0 arity constant on the term level
@@ -174,8 +184,8 @@ export class SExpression{
             //Search the quantifier stack backwards and bind to the nearest one 
             for(let i = quantifierStack.length-1; i >= 0; i--){
                 let quantifier : SExpression = quantifierStack[i];
-                let quantifedVar : string = quantifier.children[0].value;
-                if(this.value == quantifedVar){
+                let quantifiedVar : string = quantifier.children[0].value;
+                if(this.value == quantifiedVar){
                     return new Array([quantifier, this]);
                 }
             }
@@ -219,31 +229,63 @@ export class SExpression{
         let leafTerms : Array<SExpression> = new Array();
         for(let child of this.children){
             //The child is only a term iff we are not a logical operator.
-            //Note that this also prevents quantifier's first children from being consitered leafs 
+            //Note that this also prevents quantifier's first children from being considered leafs 
             let isTermLevel : boolean = !logicalOperatorNames.includes(this.value);
             leafTerms = leafTerms.concat(child.recursiveLeafTerms(isTermLevel));
         }
         return leafTerms;
     }
 
-    occurances(position : Array<number> = [], termLevel : boolean = false) : Array<[Array<number>, SExpression]>{
+    /**
+     * @param position The position of the root formula in the SExpression Tree
+     * @returns a list of occurrences of all sub formulae, an occurrence in this context is a
+     * Position(sequence of branches used to get to this S-Expression) and a reference to the
+     * S-Expression itself
+     */
+    getOccurrences(_position : Array<number> = []) : Array<[Array<number>, SExpression]>{
         //Base case, term level 0 arity
-        if(this.children.length == 0 && termLevel){
-            return new Array([position, this]);
+        if(this.children.length == 0){
+            return new Array([_position.slice(), this]);
         }
         //Recursive case, children
-        let leafTerms : Array<SExpression> = new Array();
-        for(child of this.children){
-            //The child is only a term iff we are not a logical operator.
-            //Note that this also prevents quantifier's first children from being consitered leafs 
-            let isTermLevel : boolean = !logicalOperatorNames.includes(this.value);
-            leafTerms = leafTerms.concat(child.recursiveLeafTerms(isTermLevel));
+        let occurrences :Array<[Array<number>, SExpression]> = new Array();
+        for(let i = 0; i < this.children.length; i++){
+            occurrences.push([_position, this]);
+            const child = this.children[i];
+            _position.push(i)
+            occurrences = occurrences.concat(child.getOccurrences(_position));
+            _position.pop()
         }
-        return leafTerms;
+        return occurrences;
     }
 
-    subExprToPositionMap() : Map<SExpression, Array<Number>>{
+    /**
+     * Returns the subformula at the given position
+     * @param pos The position to find the subformula at
+     * @returns The SExpression at that position
+     */
+    subformulaAtPosition(pos : Array<number>) : SExpression{
+        if(pos.length == 0){
+            return this;
+        }else if(this.children.length > pos[0]){
+            return this.children[pos[0]].subformulaAtPosition(pos.slice(1));
+        }else{
+            return null;
+        }
+    }
 
+    /**
+     * Get the position of a given subformula
+     * @param subformula 
+     * @todo Speed up by caching formulaPositions, 
+     *       right now this is just as bad as linear search over all subformula
+     */
+    subFormulaPosition(subformula : SExpression) : Array<number>{
+        let formulaPositions : Map<SExpression, Array<number>> = new Map();
+        for(const [pos, expr] of this.getOccurrences()){
+            formulaPositions.set(expr, pos);
+        }
+        return formulaPositions.get(subformula);
     }
 
     /**
@@ -260,6 +302,4 @@ export class SExpression{
         }
         return consts;
     }
-
-
 }

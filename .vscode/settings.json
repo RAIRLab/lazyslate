@@ -1,12 +1,24 @@
 {
     "cSpell.words": [
         "alnum",
+        "antecedant",
         "biconditional",
+        "conjunctl",
+        "conjunctr",
+        "consts",
+        "Elim",
+        "fileoverview",
         "forall",
         "fullname",
         "gainsboro",
+        "lantecedant",
         "Lazyslate",
-        "ponens"
+        "ponens",
+        "rantecedant",
+        "sexpression",
+        "subformula",
+        "Subformulae",
+        "subformulas"
     ],
     "editor.rulers" : [
         120

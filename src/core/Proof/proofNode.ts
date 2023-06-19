@@ -38,6 +38,8 @@ export class BoundingBox{
  *                       ^
  *                      botAnchor (for outgoing lines)
  * ```
+ * 
+ * TODO: Separate theoretical representation and GUI representations into septate classes
  */
 export class ProofNode{
 

@@ -604,6 +604,49 @@ function is_exists_expression(expression : SExpression) : boolean{
     return true;
 }
 
+/**
+ * Returns the constant symbol in a formula on the parent that is being replaced by variable v 
+ * in the formula of node, or null if the structures do not match for a replacement.
+ * @example Given
+ * Parent: (P a)
+ * Node: (Exists x (P x))
+ * v: x
+ * Will return "a"
+ * 
+ * @param node 
+ * @param parent 
+ * @param v 
+ * @returns A string representing the symbol in the the proof node or null if impossible
+ */
+function getReplacedVarSymbol(node : ProofNode, parent: ProofNode, v : SExpression) : string{
+    const var0position : Array<number> = node.expression.children[1].subFormulaPosition(v);
+    //Find the position of where a var was placed in the subformula
+    const replacedVarExpr : SExpression = parent.expression.subformulaAtPosition(var0position);
+    if(replacedVarExpr == null){
+        console.log("Formulae structure do not match: " + node.expression.children[1].toString() + " and " +
+                    parent.expression.toString())
+        return null;
+    }
+    return replacedVarExpr.value;
+}
+
+/**
+ * Replaces all instances of variables with symbols matching varSymbol with replaceSymbol and returns a new expression
+ * @param base The formula to replace the symbol in.
+ * @param varSymbol The symbol being replaced
+ * @param replaceSymbol The symbol to be substituted in 
+ * @returns a copy of base with varSymbol replaced by replaceSymbol
+ */
+function substituteVarSymbol(base : SExpression, varSymbol : string, replaceSymbol : string) : SExpression{
+    let quantifiedExpr : SExpression = base.copy();
+    for(let v of quantifiedExpr.vars()){
+        if(v.value == varSymbol){
+            v.value = replaceSymbol;
+        }
+    }
+    return quantifiedExpr;
+}
+
 function verifyExistsIntro(node : ProofNode) : boolean{
     if(!is_exists_expression(node.expression))
         return false;
@@ -626,26 +669,15 @@ function verifyExistsIntro(node : ProofNode) : boolean{
     //Ensure the syntax of the child tree matches under substitution
     const varList : Array<SExpression> = node.expression.varsOfQuantifier();
     if(varList.length != 0){ //We only care about checking if vars have been replaced if they exist
-        const var0position : Array<number> = node.expression.children[1].subFormulaPosition(varList[0]);
-        //Find the position of where a var was placed in the subformula
-        const replacedVarExpr : SExpression = parent_node.expression.subformulaAtPosition(var0position);
-        if(replacedVarExpr == null){
-            console.log("Formulae structure do not match: " + node.expression.children[1].toString() + " and " +
-                        parent_node.expression.toString())
+        const replacedVarSymbol : string = getReplacedVarSymbol(node, parent_node, varList[0]);
+        if(replacedVarSymbol == null){
             return false;
         }
-        const replacedVarSymbol : string = replacedVarExpr.value;
-
-        console.log(replacedVarSymbol);
+        //console.log(replacedVarSymbol);
         //Copy the child formula of the quantifier and,
         //replace all instances of the replaced variable with the replacedVarSymbol
         //It should match the parent formula
-        let quantifiedExpr : SExpression = node.expression.copy();
-        for(let v of quantifiedExpr.vars()){
-            if(v.value == quantifiedVarSymbol){
-                v.value = replacedVarSymbol;
-            }
-        }
+        const quantifiedExpr = substituteVarSymbol(node.expression, quantifiedVarSymbol, replacedVarSymbol);
         const quantifiedExprArg = quantifiedExpr.children[1] 
         if(!quantifiedExprArg.equals(parent_node.expression)){
             console.error("Failed to verify: " + node.expression.toString() + " due to arg formula mismatch between " +

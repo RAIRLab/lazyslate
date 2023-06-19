@@ -34,10 +34,10 @@ export const inferenceRules : Array<{name:string,fullname:string}> = [
     {name: "ifE", fullname: "Conditional Elimination (Modus ponens)", },
     {name: "iffI", fullname: "Biconditional Introduction", },
     {name: "iffE", fullname: "Biconditional Elimination", },
-    {name: "forallI", fullname: "Universal Introduction", },
-    {name: "forallE", fullname: "Universal Elimination", },
-    {name: "existsI", fullname: "Existential Introduction", },
-    {name: "existsE", fullname: "Existential Elimination", },
+    {name: "forallI", fullname: "Universal Introduction (Universal Generalization)", },
+    {name: "forallE", fullname: "Universal Elimination (Universal Instantiation)", },
+    {name: "existsI", fullname: "Existential Introduction (Existential Generalization)", },
+    {name: "existsE", fullname: "Existential Elimination (Existential Instantiation)", },
 ];
 
 //Create unicode inference rule symbols for the link labels

@@ -687,7 +687,16 @@ function verifyExistsIntro(node : ProofNode) : boolean{
     }
 
     //Assumption updating
-    node.assumptions = new Set(parent_node.assumptions)
+    node.assumptions = new Set(parent_node.assumptions);
+    return true;
+}
+
+function verifyExistsElim(node : ProofNode) : boolean{
+    if(node.parents.length != 2)
+        return false;
+    
+    //existsParrent 
+
     return true;
 }
 

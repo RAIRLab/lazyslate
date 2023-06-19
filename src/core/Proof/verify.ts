@@ -615,7 +615,7 @@ function verifyExistsIntro(node : ProofNode) : boolean{
     //in the parent formula.
     const parent_node = node.parents[0];
     const quantifiedVarSymbol : string = node.expression.children[0].value;
-    const parentConstantSymbols : Array<string> = parent_node.expression.vars().map(x=>x.value);
+    const parentConstantSymbols : Array<string> = parent_node.expression.constants().map(x=>x.value);
     if(parentConstantSymbols.includes(quantifiedVarSymbol)){
         console.error("The variable \"" + quantifiedVarSymbol + "\" appears free in the parent formula " + 
         parent_node.expression.toString());
@@ -624,11 +624,16 @@ function verifyExistsIntro(node : ProofNode) : boolean{
         
 
     //Ensure the syntax of the child tree matches under substitution
-    const varList : Array<SExpression> = node.expression.vars();
+    const varList : Array<SExpression> = node.expression.varsOfQuantifier();
     if(varList.length != 0){ //We only care about checking if vars have been replaced if they exist
         const var0position : Array<number> = node.expression.children[1].subFormulaPosition(varList[0]);
         //Find the position of where a var was placed in the subformula
         const replacedVarExpr : SExpression = parent_node.expression.subformulaAtPosition(var0position);
+        if(replacedVarExpr == null){
+            console.log("Formulae structure do not match: " + node.expression.children[1].toString() + " and " +
+                        parent_node.expression.toString())
+            return false;
+        }
         const replacedVarSymbol : string = replacedVarExpr.value;
 
         console.log(replacedVarSymbol);
@@ -641,9 +646,10 @@ function verifyExistsIntro(node : ProofNode) : boolean{
                 v.value = replacedVarSymbol;
             }
         }
-        if(!quantifiedExpr.children[1].equals(parent_node.expression)){
-            console.error("Failed to verify:" + node.expression.toString() + "due to arg formula mismatch between " +
-            quantifiedExpr.toString() + " and " + parent_node.expression);
+        const quantifiedExprArg = quantifiedExpr.children[1] 
+        if(!quantifiedExprArg.equals(parent_node.expression)){
+            console.error("Failed to verify: " + node.expression.toString() + " due to arg formula mismatch between " +
+            quantifiedExprArg.toString() + " and " + parent_node.expression);
             return false;
         }
     }

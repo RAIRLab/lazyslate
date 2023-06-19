@@ -219,6 +219,16 @@ export class SExpression{
         return boundVars;
     }
 
+    /**
+     * Get list of vars bound to this top level quantifier, if not a quantifier, returns [].
+     * @returns a list of vars bound to the top level quantifier.
+     */
+    varsOfQuantifier() : Array<SExpression>{
+        let boundVarsAndQuants : Array<[SExpression, SExpression]> = this.varsRecursive([], false);
+        let boundVars : Array<SExpression> = boundVarsAndQuants.filter(v=>v[0] == this).map(v=>v[1]);
+        return boundVars;
+    }
+
 
     private recursiveLeafTerms(termLevel : boolean) : Array<SExpression>{
         //Base case, term level 0 arity

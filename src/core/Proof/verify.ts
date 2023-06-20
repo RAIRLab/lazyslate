@@ -692,10 +692,41 @@ function verifyExistsIntro(node : ProofNode) : boolean{
 }
 
 function verifyExistsElim(node : ProofNode) : boolean{
-    if(node.parents.length != 2)
+    if(node.parents.length != 2){
+        console.error("Existential elim requires two parents");
         return false;
+    }
+        
     
-    //existsParrent 
+    //Find which parent is derived from the witness and which is the existential formula
+    //TODO: what if the parents are the same? is this even possible? I feel like ive seen this b4. 
+    let witnessParent : ProofNode = null;       
+    let existentialParent : ProofNode = null;   
+    if(node.expression.equals(node.parents[0].expression)){
+        witnessParent = node.parents[0];
+        existentialParent = node.parents[1];
+    }else if(node.expression.equals(node.parents[1].expression)){
+        witnessParent = node.parents[1];
+        existentialParent = node.parents[0];
+    }else{
+        console.error("ExistsElim expects the formula of the conclusion node:" + node.expression.toString() + 
+        " to match the formulae of one of it's premises: [" + node.parents[0].expression.toString() + ", " +  
+        node.parents[1].expression.toString());
+        return false;
+    }
+
+    //
+    if(!is_exists_expression(existentialParent.expression)){
+        console.error("ExistsElim expects " + existentialParent.expression.toString + " to be an existential formula");
+        return false;
+    }
+
+    //An assumption of the witness parent must match the substituted existential parent.
+    for 
+
+
+    //Assumptions are the union of 
+    node.assumptions = new Set(node.parents[0].assumptions);
 
     return true;
 }

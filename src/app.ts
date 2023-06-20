@@ -15,7 +15,7 @@ import { setStateFromJSON } from "./core/Proof/jsonIO"
 import { drawState } from "./core/Canvas/proofCanvas"
 import { proofLinks, proofNodes } from "./core/Proof/state"
 
-//When the document loads initlize the canvas and load proof if provided by URL
+//When the document loads initialize the canvas and load proof if provided by URL
 window.addEventListener('load', function() {
     //Expose global state to console
     this.window["proofNodes"] = proofNodes;

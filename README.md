@@ -6,6 +6,10 @@
 Lazyslate is an open source graphical proof construction assistant for the creation of Natural Deduction proofs. 
 It is influenced by the commercial Hyperslate Proof Assistant which has many more features and additional logics. 
 
+## Sample Proofs
+Some basic tautologies:
+[A -> A, (A /\ B) => (B /\ A), (A /\ (A -> B)) -> B](https://james-oswald.github.io/lazyslate/?proof=N4Igdg9gJgpgziAXAbVASykgDAGnAQwFsYkQsQ8YAPABwCd440IxSBBCkAKwFc4AXNADM0AY3yCWpfHDg9inGhCaTWiUFSQAWAOwBWPAE8kAJjMBfcznSZEARjxgiJRCACSQgARtP%2DABb4YN6c1PSMzGogABTC3t4AlJy8AsJiEhGkwm6KymiqSBraWiZGSADMAJwAbJbWIBimjs6kJiG0DLIZrlGBUHEAQol4yYIi4vmuMnIKeEoqXYWIABxluCDGiCZ2JrU25U0KrmVtYZ1S3b2e%2DQlJfKNpEyC92bO5E4tLWg7rSHp2S7t6rYtAcXCAtCcOkxziAOMM7qlxl0nmAoABRHLzc6LHRVEE%2DRBlKo7Kx7RAGAiHEB6SHhGH9W4pMbpGG9DGvLFqRYVExLUqEvRaQENRBVUGkADCEEIhB4%2DHSADcYJ4pWBeGBRKoEJR2nTIjEvD1UQN4p4jX1rmx4kNuAjmY8spi8gsQJpEDpdPyqjoKsLbDpxa4dLSzvrLj4DSabSNESzIlN5CQOc7sa6kHYyiY1hss1g%2DUg+ZSwUsQ9DInDbUyHsi2U73mn7CYqmV+WU9L7SUCkBVAyAKqXkZGfINGfckazUeyQHMU1yG3YtFoWwS22V8%2DY1k4qXZyDrTmXSAz4VXx5FhFOZ%2DW3RmdCUCXoykLOyK7N8t2CALLQeCeAAKLBgMBtRAUIoUHWJzTiIcrmtGDR1jB0hBeac3hda8TAqQsNiqJYanMABdPAABs0DAABrBAUGQXA7EI5ASi0OiSj0OiQTKOiDHYnBkBbKo6IDJZ+JwCo6L5Hc6J7cTuJ3HBX3w%2DDzCAA)
+
 ## Building
 
 #### Dependancies

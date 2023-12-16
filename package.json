@@ -1,7 +1,7 @@
 {
   "name": "lazyslate",
-  "version": "1.0.0",
-  "description": "## Info",
+  "version": "1.0.2",
+  "description": "Lazyslate is a web-based graphical interactive theorem prover based on the slate system.",
   "scripts": {
     "build": "webpack --mode production"
   },

@@ -3,26 +3,32 @@
   "version": "1.0.2",
   "description": "Lazyslate is a web-based graphical interactive theorem prover based on the slate system.",
   "scripts": {
-    "build": "webpack --mode production"
+    "build": "vite build --mode production",
+    "build-dev": "vite build --mode development",
+    "live-edit": "vite serve --mode development"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/James-Oswald/lazyslate.git"
+    "url": "git+https://github.com/RAIRLab/lazyslate.git"
   },
-  "keywords": ["interactive-theorem-prover"],
-  "author": "",
+  "keywords": [
+    "interactive-theorem-prover"
+  ],
+  "author": "The Rensselaer Artificial Intelligence and Reasoning (RAIR) Laboratory",
+  "contributors": [
+    "James Oswald <oswalj@rpi.edu> (jamesoswald.dev)",
+    "Brandon Rozek <rozekb@rpi.edu> (brandonrozek.com)"
+  ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/James-Oswald/lazyslate/issues"
+    "url": "https://github.com/RAIRLab/lazyslate/issues"
   },
-  "homepage": "https://github.com/James-Oswald/lazyslate",
+  "homepage": "https://github.com/RAIRLab/lazyslate",
   "devDependencies": {
-    "css-loader": "^6.8.1",
-    "html-webpack-plugin": "^5.5.1",
-    "style-loader": "^3.3.3",
-    "ts-loader": "^9.4.3",
     "typescript": "^5.0.4",
-    "webpack": "^5.84.1",
-    "webpack-cli": "^5.1.1"
+    "vite": "^5.0.10"
+  },
+  "dependencies": {
+    "lz-string": "^1.5.0"
   }
 }

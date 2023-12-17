@@ -1,5 +1,5 @@
 
-//Initilize modules
+//Initialize modules
 
 import "./core/Proof/state"
 import "./core/Widgets/header"
@@ -8,13 +8,11 @@ import "./core/Canvas/proofCanvas"
 import "./core/Proof/sexpression"
 import "./core/Proof/verify"
 
-import "./style.css"
-
-import { decompressFromEncodedURIComponent } from "./libs/lz-string"
+import { decompressFromEncodedURIComponent } from "lz-string"
 import { setStateFromJSON } from "./core/Proof/jsonIO"
 import { drawState } from "./core/Canvas/proofCanvas"
 
-//When the document loads initlize the canvas and load proof if provided by URL
+//When the document loads initialize the canvas and load proof if provided by URL
 window.addEventListener('load', function() {
     //Load the proof encoded in the URL if it exists
     const queryString : string = window.location.search;

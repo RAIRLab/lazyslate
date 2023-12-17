@@ -6,6 +6,7 @@ let root = "src";
 export default defineConfig({
   build: {
     root: root,
+    base: "/lazyslate/",
     outDir: "dist",
     emptyOutDir: true,
     rollupOptions: {

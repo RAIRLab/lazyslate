@@ -2,10 +2,13 @@
   "name": "lazyslate",
   "version": "1.0.2",
   "description": "Lazyslate is a web-based graphical interactive theorem prover based on the slate system.",
+  "src": "build/index.html",
   "scripts": {
     "build": "vite build --mode production",
     "build-dev": "vite build --mode development",
-    "live-edit": "vite serve --mode development"
+    "preview": "vite preview --open",
+    "live-edit": "vite serve --open",
+    "vsc-debug": "vite serve"
   },
   "repository": {
     "type": "git",

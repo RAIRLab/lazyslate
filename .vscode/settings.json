@@ -6,7 +6,9 @@
         "fullname",
         "gainsboro",
         "Lazyslate",
-        "ponens"
+        "ponens",
+        "Rensselaer",
+        "sexpression"
     ],
     "editor.rulers" : [
         120

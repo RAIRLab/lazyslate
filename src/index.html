@@ -3,10 +3,10 @@
     <head>
         <meta charset="UTF-8">
         <title>LazySlate</title>
-        <!--Webpack will atomatically include the required js scripts and styles-->
+        <link rel="stylesheet" href="style.css">
+        <script src="app.ts" type="module"></script>
     </head>
     <body>
-        
         <!--The header menu-->
         <header id="header">
             <label for="proof-file-input">Upload Proof File</label>
@@ -35,8 +35,5 @@
         <div id="canvas-blocker"></div> <!--visible when node menu is open to prevent clicks on the canvas-->
         <!--The main HTML Canvas-->
         <canvas id="proof-canvas" oncontextmenu="return false;"></canvas>
-
-        
-
     </body>
 </html>

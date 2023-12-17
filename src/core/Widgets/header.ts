@@ -3,7 +3,7 @@
  * @fileoverview Contains event handlers for items in the header menu
  */
 
-import { compressToEncodedURIComponent } from "../../libs/lz-string";
+import { compressToEncodedURIComponent } from "lz-string";
 import { setStateFromJSON, stateToJSON } from "../Proof/jsonIO";
 import { drawState } from "../Canvas/proofCanvas";
 

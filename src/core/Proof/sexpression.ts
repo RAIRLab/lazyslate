@@ -79,10 +79,27 @@ export class SExpression{
     isValid() : boolean{
         let valid : boolean = true;
         valid &&= this.value != "ERROR"
+        valid &&= this.hasValidLogicalOperatorArity();
         for(let child of this.children){
             valid &&= child.isValid();
         }
         return valid;
+    }
+
+    /**
+     * Logical operators have fixed arity in propositional mode.
+     * Non-logical symbols (predicates/functions/constants) may take any number of children.
+     */
+    private hasValidLogicalOperatorArity() : boolean{
+        if(this.value == "not"){
+            return this.children.length == 1;
+        }
+
+        if(this.value == "and" || this.value == "or" || this.value == "if" || this.value == "iff"){
+            return this.children.length == 2;
+        }
+
+        return true;
     }
 
     /**
@@ -104,6 +121,9 @@ export class SExpression{
                 return "(" + string + ")";
             else
                 return string;
+        }else if(logicalOperatorNames.includes(this.value)){
+            // Logical operator with invalid arity
+            return "ERROR";
         }else{ //We're a function or predicate
             let string = this.value + "(";
             for(let child of this.children){
